@@ -5,10 +5,10 @@ import Layout from "../../../components/auth/Layout";
 import { NextPageWithLayout } from "../_app";
 
 type ProvidersProps = {
-  providers: ReturnType<typeof getProviders>;
+  providers: Awaited<ReturnType<typeof getProviders>>;
 };
 
-const providerIcon = (providerName: "Discord" | "GitHub" | "Auth0") => {
+const providerIcon = (providerName: string) => {
   switch (providerName) {
     case "Discord":
       return <SiDiscord size={40} />;
@@ -30,13 +30,14 @@ const SignIn: NextPageWithLayout<ProvidersProps> = ({ providers }) => {
           To log in use one of the providers below
         </div>
         <div className="flex justify-evenly w-full m-4">
-          {Object.values(providers).map((provider) => (
-            <div key={provider.name} className="hover:text-gray-500">
-              <button onClick={() => signIn(provider.id)}>
-                {providerIcon(provider.name)}
-              </button>
-            </div>
-          ))}
+          {providers &&
+            Object.values(providers).map((provider) => (
+              <div key={provider.name} className="hover:text-gray-500">
+                <button onClick={() => signIn(provider.id)}>
+                  {providerIcon(provider.name)}
+                </button>
+              </div>
+            ))}
         </div>
       </div>
     </>
