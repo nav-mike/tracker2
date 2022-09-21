@@ -2,17 +2,33 @@
 import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
 import { loggerLink } from "@trpc/client/links/loggerLink";
 import { withTRPC } from "@trpc/next";
+import type { NextPage } from "next";
 import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/dist/shared/lib/utils";
 import superjson from "superjson";
+import type { ReactElement, ReactNode } from "react";
 import type { AppRouter } from "../server/router";
 import "../styles/globals.css";
+import { AppProps } from "next/app";
+
+export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
+  P,
+  IP
+> & {
+  getLayout?: (page: ReactElement) => ReactElement<any, any> | null;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
 
 const MyApp: AppType = ({
   Component,
   pageProps: { session, ...pageProps },
-}) => {
-  return (
+}: AppPropsWithLayout) => {
+  const getLayout = Component.getLayout || ((page) => page);
+
+  return getLayout(
     <SessionProvider session={session}>
       <Component {...pageProps} />
     </SessionProvider>
