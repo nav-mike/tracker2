@@ -10,6 +10,8 @@ import type { ReactElement, ReactNode } from "react";
 import type { AppRouter } from "../server/router";
 import "../styles/globals.css";
 import { AppProps } from "next/app";
+import { AuthRequired } from "../types/auth-required";
+import Auth from "../../components/auth/Auth";
 
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
   P,
@@ -19,7 +21,7 @@ export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
 };
 
 type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout;
+  Component: NextPageWithLayout & AuthRequired;
 };
 
 const MyApp: AppType = ({
@@ -30,7 +32,13 @@ const MyApp: AppType = ({
 
   return getLayout(
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      {Component.auth ? (
+        <Auth>
+          <Component {...pageProps} />
+        </Auth>
+      ) : (
+        <Component {...pageProps} />
+      )}
     </SessionProvider>
   );
 };

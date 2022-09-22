@@ -1,8 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { AuthRequired } from "../types/auth-required";
 import { trpc } from "../utils/trpc";
 
-const Home: NextPage = () => {
+const Home: NextPage & AuthRequired = () => {
   const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
 
   return (
@@ -56,6 +57,10 @@ const Home: NextPage = () => {
       </main>
     </>
   );
+};
+
+Home.auth = {
+  unauthorized: "/auth/signin",
 };
 
 export default Home;
