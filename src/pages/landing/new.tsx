@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Layout from "../../components/common/Layout";
 import { ProtectedPage } from "../../types/auth-required";
 
 const NewLandingPage: ProtectedPage = () => {
@@ -13,6 +14,10 @@ const NewLandingPage: ProtectedPage = () => {
       </div>
     </>
   );
+};
+
+NewLandingPage.getLayout = (page) => {
+  return <Layout>{page}</Layout>;
 };
 
 export default NewLandingPage;

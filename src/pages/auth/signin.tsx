@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { getProviders, signIn } from "next-auth/react";
 import { SiAuth0, SiGithub, SiDiscord } from "react-icons/si";
-import Layout from "../../../components/auth/Layout";
+import Layout from "../../components/auth/Layout";
 import { NextPageWithLayout } from "../_app";
 
 type ProvidersProps = {

@@ -11,7 +11,7 @@ import type { AppRouter } from "../server/router";
 import "../styles/globals.css";
 import { AppProps } from "next/app";
 import { AuthRequired } from "../types/auth-required";
-import Auth from "../../components/auth/Auth";
+import Auth from "../components/auth/Auth";
 
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
   P,
@@ -29,9 +29,8 @@ const MyApp: AppType = ({
   pageProps: { session, ...pageProps },
 }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout || ((page) => page);
-
-  return getLayout(
-    <SessionProvider session={session}>
+  const component = getLayout(
+    <>
       {Component.auth ? (
         <Auth>
           <Component {...pageProps} />
@@ -39,8 +38,10 @@ const MyApp: AppType = ({
       ) : (
         <Component {...pageProps} />
       )}
-    </SessionProvider>
+    </>
   );
+
+  return <SessionProvider session={session}>{component}</SessionProvider>;
 };
 
 const getBaseUrl = () => {

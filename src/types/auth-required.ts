@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { NextPageWithLayout } from "../pages/_app";
 
 export type AuthRequired = {
   auth?: {
@@ -6,4 +6,4 @@ export type AuthRequired = {
   };
 };
 
-export type ProtectedPage = NextPage & AuthRequired;
+export type ProtectedPage = NextPageWithLayout & AuthRequired;

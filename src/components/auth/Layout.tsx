@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { LayoutType } from "../../src/types/layout-type";
+import { LayoutType } from "../../types/layout-type";
 
 const Layout: FC<LayoutType> = ({ children }) => {
   return (
