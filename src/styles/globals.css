@@ -58,4 +58,20 @@
   .button-primary:focus {
     @apply bg-blue-600;
   }
+
+  .button-success {
+    @apply bg-green-500 text-white;
+  }
+
+  .button-success:hover {
+    @apply bg-green-600;
+  }
+
+  .button-success:active {
+    @apply bg-green-700;
+  }
+
+  .button-success:focus {
+    @apply bg-green-600;
+  }
 }

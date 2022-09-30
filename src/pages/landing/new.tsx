@@ -6,8 +6,6 @@ import { ProtectedPage } from "../../types/auth-required";
 import Link from "next/link";
 
 const NewLandingPage: ProtectedPage = () => {
-  console.log(getCodeList());
-
   return (
     <>
       <Head>

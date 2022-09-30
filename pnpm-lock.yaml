@@ -27,6 +27,7 @@ specifiers:
   react-icons: ^4.4.0
   react-query: 3.39.2
   react-select: ^5.4.0
+  react-table: ^7.8.0
   superjson: ^1.10.0
   tailwindcss: ^3.1.8
   typescript: 4.7.4
@@ -63,6 +64,7 @@ devDependencies:
   eslint-config-next: 12.2.5_4rv7y5c6xz3vfxwhbrcxxi73bq
   postcss: 8.4.16
   prisma: 4.3.1
+  react-table: 7.8.0_react@18.2.0
   tailwindcss: 3.1.8_postcss@8.4.16
   typescript: 4.7.4
 
@@ -2492,6 +2494,14 @@ packages:
       react: 18.2.0
     dev: false
 
+  /react-table/7.8.0_react@18.2.0:
+    resolution: {integrity: sha512-hNaz4ygkZO4bESeFfnfOft73iBUj8K5oKi1EcSHPAibEydfsX2MyU6Z8KCr3mv3C9Kqqh71U+DhZkFvibbnPbA==}
+    peerDependencies:
+      react: ^16.8.3 || ^17.0.0-0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: true
+
   /react-transition-group/4.4.5_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
     peerDependencies:
@@ -2511,7 +2521,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
 
   /read-cache/1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}
