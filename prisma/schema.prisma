@@ -62,6 +62,8 @@ model LandingPage {
   id          String   @id @default(cuid())
   name        String
   offersCount Int
+  countries   Json
+  url         String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
