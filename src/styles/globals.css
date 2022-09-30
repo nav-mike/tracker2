@@ -10,4 +10,52 @@
   .user-menu-item {
     @apply flex flex-row gap-4 items-center p-4 hover:bg-gray-300 rounded-md;
   }
+
+  .form {
+    @apply flex flex-col gap-4 max-w-3xl m-4;
+  }
+
+  .form-controls {
+    @apply grid grid-rows-1 grid-cols-2 gap-4 items-center;
+  }
+
+  .form-control {
+    @apply rounded-md border border-gray-300 p-2;
+  }
+
+  .form-control-left {
+    @apply justify-self-end;
+  }
+
+  .button {
+    @apply bg-gray-200 text-black rounded-md p-2;
+  }
+
+  .button:hover {
+    @apply bg-gray-300;
+  }
+
+  .button:active {
+    @apply bg-gray-400;
+  }
+
+  .button:focus {
+    @apply bg-gray-300;
+  }
+
+  .button-primary {
+    @apply bg-blue-500 text-white;
+  }
+
+  .button-primary:hover {
+    @apply bg-blue-600;
+  }
+
+  .button-primary:active {
+    @apply bg-blue-700;
+  }
+
+  .button-primary:focus {
+    @apply bg-blue-600;
+  }
 }
