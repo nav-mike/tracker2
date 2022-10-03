@@ -50,6 +50,7 @@ const IndexLandingPage: ProtectedPage = () => {
                         color: "black",
                         fontWeight: "bold",
                       }}
+                      key={column}
                     >
                       {column.render("Header")}
                     </th>
