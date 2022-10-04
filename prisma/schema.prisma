@@ -48,6 +48,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  landingPages  LandingPage[]
 }
 
 model VerificationToken {
@@ -61,9 +62,11 @@ model VerificationToken {
 model LandingPage {
   id          String   @id @default(cuid())
   name        String
-  offersCount Int
+  offersCount Int?
   countries   Json
   url         String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

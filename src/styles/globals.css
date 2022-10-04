@@ -16,7 +16,7 @@
   }
 
   .form-controls {
-    @apply grid grid-rows-1 grid-cols-2 gap-4 items-center;
+    @apply grid grid-rows-1 grid-cols-2 gap-4 items-start;
   }
 
   .form-control {
@@ -73,5 +73,9 @@
 
   .button-success:focus {
     @apply bg-green-600;
+  }
+
+  .form-error {
+    @apply pt-2 text-red-500 italic;
   }
 }
