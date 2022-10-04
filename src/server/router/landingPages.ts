@@ -8,15 +8,26 @@ const CreateLandingDTO = z.object({
   url: z.string(),
 });
 
-export const landingPagesRouter = createProtectedRouter().mutation("create", {
-  input: CreateLandingDTO,
-  resolve: async ({ ctx, input }) => {
-    const landing = await ctx.prisma.landingPage.create({
-      data: {
-        ...input,
-        userId: ctx.session.user.id,
-      },
-    });
-    return landing;
-  },
-});
+export const landingPagesRouter = createProtectedRouter()
+  .mutation("create", {
+    input: CreateLandingDTO,
+    resolve: async ({ ctx, input }) => {
+      const landing = await ctx.prisma.landingPage.create({
+        data: {
+          ...input,
+          userId: ctx.session.user.id,
+        },
+      });
+      return landing;
+    },
+  })
+  .query("index", {
+    resolve: async ({ ctx }) => {
+      const landingPages = await ctx.prisma.landingPage.findMany({
+        where: {
+          userId: ctx.session.user.id,
+        },
+      });
+      return landingPages;
+    },
+  });
