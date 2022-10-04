@@ -6,10 +6,11 @@ import { ProtectedPage } from "../../types/auth-required";
 import Link from "next/link";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import ErrorInputMessage from "../../components/form/ErrorInputMessage";
+import { trpc } from "../../utils/trpc";
 
 type Inputs = {
   name: string;
-  countries: string[];
+  countries?: { label: string; value: string }[];
   offersCount?: number;
   url: string;
 };
@@ -21,12 +22,19 @@ const NewLandingPage: ProtectedPage = () => {
     handleSubmit: onSubmit,
     formState: { errors },
   } = useForm<Inputs>();
+  const createLandingPage = trpc.useMutation("landingPages.create");
 
   const handleSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
+    const landingPage = {
+      ...data,
+      countries: data.countries?.map((country) => country.value.toUpperCase()),
+      offersCount: data.offersCount ? +data.offersCount : null,
+    };
+    createLandingPage
+      .mutateAsync(landingPage)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
-
-  console.log(errors);
 
   return (
     <>
@@ -52,7 +60,7 @@ const NewLandingPage: ProtectedPage = () => {
               />
               {errors.url && (
                 <ErrorInputMessage>
-                  Offer name is required and the max length is 80 symbols
+                  Landing page name is required and the max length is 80 symbols
                 </ErrorInputMessage>
               )}
             </div>
@@ -71,7 +79,7 @@ const NewLandingPage: ProtectedPage = () => {
                   options={Object.entries(getCodeList()).map(
                     ([code, name]) => ({
                       value: code,
-                      label: `${name} [${code}]`,
+                      label: `${name} [${code.toUpperCase()}]`,
                     })
                   )}
                   id="countries"
