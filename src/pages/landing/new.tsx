@@ -7,6 +7,7 @@ import Link from "next/link";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import ErrorInputMessage from "../../components/form/ErrorInputMessage";
 import { trpc } from "../../utils/trpc";
+import { useRouter } from "next/router";
 
 type Inputs = {
   name: string;
@@ -23,6 +24,7 @@ const NewLandingPage: ProtectedPage = () => {
     formState: { errors },
   } = useForm<Inputs>();
   const createLandingPage = trpc.useMutation("landingPages.create");
+  const router = useRouter();
 
   const handleSubmit: SubmitHandler<Inputs> = (data) => {
     const landingPage = {
@@ -32,7 +34,7 @@ const NewLandingPage: ProtectedPage = () => {
     };
     createLandingPage
       .mutateAsync(landingPage)
-      .then((res) => console.log(res))
+      .then(() => router.push("/landing"))
       .catch((err) => console.log(err));
   };
 
