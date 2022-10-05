@@ -1,28 +1,95 @@
+import { LandingPage } from "@prisma/client";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import Head from "next/head";
 import Link from "next/link";
-import { useMemo } from "react";
-import { useTable } from "react-table";
+import { useEffect, useState } from "react";
 import Layout from "../../components/common/Layout";
 import { ProtectedPage } from "../../types/auth-required";
+import { trpc } from "../../utils/trpc";
+
+const columnHelper = createColumnHelper<LandingPage>();
+
+const defaultColumns = [
+  columnHelper.accessor("id", {
+    header: "ID",
+    cell: (row) => row.getValue(),
+  }),
+  columnHelper.accessor("name", {
+    header: "Name",
+    cell: (row) => row.getValue(),
+  }),
+  columnHelper.accessor("id", {
+    header: "Visits",
+    cell: () => 0,
+  }),
+  columnHelper.accessor("id", {
+    header: "Clicks",
+    cell: () => 0,
+  }),
+  columnHelper.accessor("id", {
+    header: "Leads",
+    cell: () => 0,
+  }),
+  columnHelper.accessor("id", {
+    header: "Cost",
+    cell: () => `$0.00`,
+  }),
+  columnHelper.accessor("id", {
+    header: "Revenue",
+    cell: () => `$0.00`,
+  }),
+  columnHelper.accessor("id", {
+    header: "Profit",
+    cell: () => `$0.00`,
+  }),
+  columnHelper.accessor("id", {
+    header: "ROI",
+    cell: () => `0.00%`,
+  }),
+  columnHelper.accessor("id", {
+    header: "CTR",
+    cell: () => `0.00%`,
+  }),
+  columnHelper.accessor("id", {
+    header: "CV",
+    cell: () => `0.00%`,
+  }),
+  columnHelper.accessor("id", {
+    header: "CR",
+    cell: () => `0.00%`,
+  }),
+  columnHelper.accessor("id", {
+    header: "CPV",
+    cell: () => `$0.00`,
+  }),
+  columnHelper.accessor("id", {
+    header: "EPV",
+    cell: () => `$0.00`,
+  }),
+  columnHelper.accessor("id", {
+    header: "EPC",
+    cell: () => `$0.00`,
+  }),
+];
 
 const IndexLandingPage: ProtectedPage = () => {
-  const data = useMemo(
-    () => [
-      { col1: "Hello", col2: "World" },
-      { col1: "react-table", col2: "rocks" },
-      { col1: "whatever", col2: "you want" },
-    ],
-    []
-  );
-  const columns = useMemo(
-    () => [
-      { Header: "Column 1", accessor: "col1" },
-      { Header: "Column 2", accessor: "col2" },
-    ],
-    []
-  );
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data });
+  const [data, setData] = useState<LandingPage[]>([]);
+  const landingPages = trpc.useQuery(["landingPages.index"]);
+
+  useEffect(() => {
+    if (landingPages.data) setData(landingPages.data);
+  }, [landingPages.data]);
+
+  const table = useReactTable({
+    data,
+    columns: defaultColumns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
     <>
@@ -30,56 +97,47 @@ const IndexLandingPage: ProtectedPage = () => {
         <title>Landing Page</title>
       </Head>
 
-      <div className="p-4">
+      <div className="p-4 flex flex-col gap-4">
         <h1 className="text-2xl">Landing Page</h1>
         <Link href="/landing/new">
-          <a className="button button-success">Create</a>
+          <a className="button button-success max-w-[4rem]">Create</a>
         </Link>
 
-        <div>
-          <table {...getTableProps()} style={{ border: "solid 1px blue" }}>
+        <div className="flex w-full p-2">
+          <table className="w-full">
             <thead>
-              {headerGroups.map((headerGroup) => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column) => (
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id} className="bg-slate-200">
+                  {headerGroup.headers.map((header) => (
                     <th
-                      {...column.getHeaderProps()}
-                      style={{
-                        borderBottom: "solid 3px red",
-                        background: "aliceblue",
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
-                      key={column}
+                      key={header.id}
+                      className="p-2 underline decoration-dashed underline-offset-4 cursor-pointer hover:text-slate-500"
                     >
-                      {column.render("Header")}
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </th>
                   ))}
                 </tr>
               ))}
             </thead>
-            <tbody {...getTableBodyProps()}>
-              {rows.map((row) => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map((cell) => {
-                      return (
-                        <td
-                          {...cell.getCellProps()}
-                          style={{
-                            padding: "10px",
-                            border: "solid 1px gray",
-                            background: "papayawhip",
-                          }}
-                        >
-                          {cell.render("Cell")}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
+
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id} className="hover:bg-slate-100 cursor-pointer">
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id} className="p-2 text-center text-gray-500">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
