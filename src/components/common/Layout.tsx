@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import { FC, useState } from "react";
+import { FC, ReactElement, useState } from "react";
 import { GrMenu } from "react-icons/gr";
 import { LayoutType } from "../../types/layout-type";
 import UserNav from "../users/UserNav";
@@ -34,3 +34,5 @@ const Layout: FC<LayoutType> = ({ children }) => {
 };
 
 export default Layout;
+
+export const commonLayout = (page: ReactElement) => <Layout>{page}</Layout>;

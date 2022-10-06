@@ -2,7 +2,7 @@ import { LandingPage } from "@prisma/client";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Layout from "../../components/common/Layout";
+import { commonLayout } from "../../components/common/Layout";
 import Table from "../../components/common/Table";
 import { ProtectedPage } from "../../types/auth-required";
 import { trpc } from "../../utils/trpc";
@@ -35,8 +35,6 @@ const IndexLandingPage: ProtectedPage = () => {
   );
 };
 
-IndexLandingPage.getLayout = (page) => {
-  return <Layout>{page}</Layout>;
-};
+IndexLandingPage.getLayout = commonLayout;
 
 export default IndexLandingPage;

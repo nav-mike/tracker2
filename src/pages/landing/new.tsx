@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { getCodeList } from "country-list";
 import Select from "react-select";
-import Layout from "../../components/common/Layout";
+import { commonLayout } from "../../components/common/Layout";
 import { ProtectedPage } from "../../types/auth-required";
 import Link from "next/link";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
@@ -132,8 +132,6 @@ const NewLandingPage: ProtectedPage = () => {
   );
 };
 
-NewLandingPage.getLayout = (page) => {
-  return <Layout>{page}</Layout>;
-};
+NewLandingPage.getLayout = commonLayout;
 
 export default NewLandingPage;
