@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { FC, useMemo } from "react";
+import Cell from "./Cell";
 
 interface ITableProps {
   data: LandingPage[];
@@ -25,7 +26,11 @@ const Table: FC<ITableProps> = ({ data }) => {
       }),
       columnHelper.accessor("name", {
         header: "Name",
-        cell: (row) => row.getValue(),
+        cell: (row) => (
+          <Cell onClick={() => handleCellClick(row.row.original.id)}>
+            {row.getValue()}
+          </Cell>
+        ),
       }),
       columnHelper.accessor("id", {
         header: "Visits",
@@ -100,6 +105,8 @@ const Table: FC<ITableProps> = ({ data }) => {
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const handleCellClick = (id: string) => console.log(id);
 
   return (
     <table className="w-full">
