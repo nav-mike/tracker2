@@ -32,4 +32,21 @@ export const landingPagesRouter = createProtectedRouter()
       });
       return landingPages;
     },
+  })
+  .mutation("update", {
+    input: z.object({
+      id: z.string(),
+      landing: CreateLandingDTO,
+    }),
+    resolve: async ({ ctx, input }) => {
+      const landing = await ctx.prisma.landingPage.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          ...input.landing,
+        },
+      });
+      return landing;
+    },
   });

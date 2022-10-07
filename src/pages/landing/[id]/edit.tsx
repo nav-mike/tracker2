@@ -1,14 +1,34 @@
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { SubmitHandler } from "react-hook-form";
 import { commonLayout } from "../../../components/common/Layout";
+import LandingForm, {
+  FormInputs,
+  LandingPageType,
+} from "../../../components/form/LandingForm";
 import { ProtectedPage } from "../../../types/auth-required";
+import { trpc } from "../../../utils/trpc";
 import { authOptions } from "../../api/auth/[...nextauth]";
 
 const EditLandingPage: ProtectedPage<{ landing: LandingPageType }> = ({
   landing,
 }) => {
-  console.log(landing);
+  const updateLandingPage = trpc.useMutation("landingPages.update");
+  const router = useRouter();
+
+  const handleSubmit: SubmitHandler<FormInputs> = (data) => {
+    const landingPage = {
+      ...data,
+      countries: data.countries?.map((country) => country.value.toUpperCase()),
+      offersCount: data.offersCount ? +data.offersCount : null,
+    };
+    updateLandingPage
+      .mutateAsync({ id: landing.id, landing: landingPage })
+      .then(() => router.push("/landing"))
+      .catch((err) => console.log(err));
+  };
 
   return (
     <>
@@ -18,6 +38,7 @@ const EditLandingPage: ProtectedPage<{ landing: LandingPageType }> = ({
 
       <div className="p-4">
         <h1 className="text-2xl">Edit Landing Page</h1>
+        <LandingForm landingPage={landing} onSubmit={handleSubmit} />
       </div>
     </>
   );
@@ -26,14 +47,6 @@ const EditLandingPage: ProtectedPage<{ landing: LandingPageType }> = ({
 EditLandingPage.getLayout = commonLayout;
 
 export default EditLandingPage;
-
-type LandingPageType = {
-  id: string;
-  name: string;
-  countries: string[];
-  offersCount: number | null;
-  url: string;
-};
 
 export const getServerSideProps: GetServerSideProps<
   { landing: LandingPageType },
