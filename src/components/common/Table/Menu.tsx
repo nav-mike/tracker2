@@ -13,7 +13,6 @@ interface IMenuProps {
 
 type Ref = HTMLDivElement;
 
-// eslint-disable-next-line react/display-name
 const Menu = forwardRef<Ref, IMenuProps>(
   ({ id, url, hrefPrefix, position }, ref) => (
     <div
@@ -57,5 +56,7 @@ const Menu = forwardRef<Ref, IMenuProps>(
     </div>
   )
 );
+
+Menu.displayName = "Menu";
 
 export default Menu;
