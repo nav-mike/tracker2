@@ -7,7 +7,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { FC, useMemo } from "react";
-import Cell from "./Cell";
 
 interface ITableProps {
   data: LandingPage[];
