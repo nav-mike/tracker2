@@ -7,9 +7,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { FC, useMemo, useRef, useState } from "react";
-import useMousePosition, {
-  MousePosition,
-} from "../../../hooks/useMousePosition";
+import useMousePosition from "../../../hooks/useMousePosition";
 import { useOutsideClick } from "../../../hooks/useOutsideClick";
 import Menu from "./Menu";
 
@@ -111,7 +109,8 @@ const Table: FC<ITableProps> = ({ data }) => {
     null
   );
   const tableRef = useRef<HTMLTableElement>(null);
-  useOutsideClick(tableRef, () => setShowMenu(false));
+  const menuRef = useRef<HTMLDivElement>(null);
+  useOutsideClick(tableRef, () => setShowMenu(false), [menuRef]);
 
   const handleRowClick = (landing: LandingPage) => {
     setSelectedLanding(landing);
@@ -164,6 +163,7 @@ const Table: FC<ITableProps> = ({ data }) => {
           url={selectedLanding.url}
           hrefPrefix="landing"
           position={menuPosition}
+          ref={menuRef}
         />
       )}
     </>

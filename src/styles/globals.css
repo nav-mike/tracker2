@@ -75,6 +75,42 @@
     @apply bg-green-600;
   }
 
+  .button-danger {
+    @apply bg-red-500 text-white;
+  }
+
+  .button-danger:hover {
+    @apply bg-red-600;
+  }
+
+  .button-danger:active {
+    @apply bg-red-700;
+  }
+
+  .button-danger:focus {
+    @apply bg-red-600;
+  }
+
+  .button-warning {
+    @apply bg-yellow-500 text-white;
+  }
+
+  .button-warning:hover {
+    @apply bg-yellow-600;
+  }
+
+  .button-warning:active {
+    @apply bg-yellow-700;
+  }
+
+  .button-warning:focus {
+    @apply bg-yellow-600;
+  }
+
+  .button-icon {
+    @apply flex gap-1 flex-row items-center;
+  }
+
   .form-error {
     @apply pt-2 text-red-500 italic;
   }
