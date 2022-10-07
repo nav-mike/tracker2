@@ -6,4 +6,7 @@ export type AuthRequired = {
   };
 };
 
-export type ProtectedPage = NextPageWithLayout & AuthRequired;
+export type ProtectedPage<
+  P = Record<string, unknown>,
+  IP = P
+> = NextPageWithLayout<P, IP> & AuthRequired;
