@@ -6,7 +6,12 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { FC, useMemo } from "react";
+import { FC, useMemo, useRef, useState } from "react";
+import useMousePosition, {
+  MousePosition,
+} from "../../../hooks/useMousePosition";
+import { useOutsideClick } from "../../../hooks/useOutsideClick";
+import Menu from "./Menu";
 
 interface ITableProps {
   data: LandingPage[];
@@ -100,47 +105,68 @@ const Table: FC<ITableProps> = ({ data }) => {
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+  const [showMenu, setShowMenu] = useState(false);
+  const menuPosition = useMousePosition();
+  const [selectedLanding, setSelectedLanding] = useState<LandingPage | null>(
+    null
+  );
+  const tableRef = useRef<HTMLTableElement>(null);
+  useOutsideClick(tableRef, () => setShowMenu(false));
 
-  const handleRowClick = (landing: LandingPage) => console.log(landing);
+  const handleRowClick = (landing: LandingPage) => {
+    setSelectedLanding(landing);
+    setShowMenu(true);
+  };
 
   return (
-    <table className="w-full">
-      <thead>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id} className="bg-slate-200">
-            {headerGroup.headers.map((header) => (
-              <th
-                key={header.id}
-                className="p-2 underline decoration-dashed underline-offset-4 cursor-pointer hover:text-slate-500"
-              >
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
+    <>
+      <table className="w-full" ref={tableRef}>
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id} className="bg-slate-200">
+              {headerGroup.headers.map((header) => (
+                <th
+                  key={header.id}
+                  className="p-2 underline decoration-dashed underline-offset-4 cursor-pointer hover:text-slate-500"
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
 
-      <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <tr
-            key={row.id}
-            className="hover:bg-slate-100 cursor-pointer"
-            onClick={() => handleRowClick(row.original)}
-          >
-            {row.getVisibleCells().map((cell) => (
-              <td key={cell.id} className="p-2 text-center text-gray-500">
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr
+              key={row.id}
+              className="hover:bg-slate-100 cursor-pointer"
+              onClick={() => handleRowClick(row.original)}
+            >
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className="p-2 text-center text-gray-500">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {showMenu && selectedLanding && (
+        <Menu
+          id={selectedLanding.id}
+          url={selectedLanding.url}
+          hrefPrefix="landing"
+          position={menuPosition}
+        />
+      )}
+    </>
   );
 };
 

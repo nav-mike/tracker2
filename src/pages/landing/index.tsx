@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { commonLayout } from "../../components/common/Layout";
-import Table from "../../components/common/Table";
+import Table from "../../components/common/Table/Table";
 import { ProtectedPage } from "../../types/auth-required";
 import { trpc } from "../../utils/trpc";
 
