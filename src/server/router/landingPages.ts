@@ -23,6 +23,8 @@ export const landingPagesRouter = createProtectedRouter()
   })
   .query("index", {
     resolve: async ({ ctx }) => {
+      if (!ctx.session.user) return [];
+
       const landingPages = await ctx.prisma.landingPage.findMany({
         where: {
           userId: ctx.session.user.id,

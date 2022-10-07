@@ -26,11 +26,7 @@ const Table: FC<ITableProps> = ({ data }) => {
       }),
       columnHelper.accessor("name", {
         header: "Name",
-        cell: (row) => (
-          <Cell onClick={() => handleCellClick(row.row.original.id)}>
-            {row.getValue()}
-          </Cell>
-        ),
+        cell: (row) => row.getValue(),
       }),
       columnHelper.accessor("id", {
         header: "Visits",
@@ -106,7 +102,7 @@ const Table: FC<ITableProps> = ({ data }) => {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const handleCellClick = (id: string) => console.log(id);
+  const handleRowClick = (landing: LandingPage) => console.log(landing);
 
   return (
     <table className="w-full">
@@ -132,7 +128,11 @@ const Table: FC<ITableProps> = ({ data }) => {
 
       <tbody>
         {table.getRowModel().rows.map((row) => (
-          <tr key={row.id} className="hover:bg-slate-100 cursor-pointer">
+          <tr
+            key={row.id}
+            className="hover:bg-slate-100 cursor-pointer"
+            onClick={() => handleRowClick(row.original)}
+          >
             {row.getVisibleCells().map((cell) => (
               <td key={cell.id} className="p-2 text-center text-gray-500">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
