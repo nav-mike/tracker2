@@ -25,8 +25,8 @@ const NewLandingPage: ProtectedPage = () => {
     };
     createLandingPage
       .mutateAsync(landingPage)
-      .then(() => router.push("/landing"))
-      .catch((err) => console.log(err));
+      .then(() => router.push("/landings"))
+      .catch((err: Error) => console.log(err));
   };
 
   return (

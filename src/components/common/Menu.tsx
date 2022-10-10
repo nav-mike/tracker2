@@ -12,12 +12,12 @@ const Menu: FC<{ isShow: boolean }> = ({ isShow }) => {
       <Link href="/">
         <a className="text-5xl">{isShow ? "Tracker2" : "T"}</a>
       </Link>
-      <Link href="/campaign">
+      <Link href="/campaigns">
         <a className="menu-item" title="Campaigns">
           <BiTable /> {isShow && "Campaigns"}
         </a>
       </Link>
-      <Link href="/landing">
+      <Link href="/landings">
         <a className="menu-item" title="Landings">
           <BsCardChecklist />
           {isShow && "Landings"}

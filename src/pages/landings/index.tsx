@@ -28,12 +28,12 @@ const IndexLandingPage: ProtectedPage = () => {
   return (
     <>
       <Head>
-        <title>Landing Page</title>
+        <title>Landing Pages</title>
       </Head>
 
       <div className="p-4 flex flex-col gap-4">
-        <h1 className="text-2xl">Landing Page</h1>
-        <Link href="/landing/new">
+        <h1 className="text-2xl">Landing Pages</h1>
+        <Link href="/landings/new">
           <a className="button button-success max-w-[4rem]">Create</a>
         </Link>
 

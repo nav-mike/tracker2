@@ -105,7 +105,7 @@ const LandingForm: FC<ILandingFormProps> = ({ landingPage, onSubmit }) => {
         </div>
       </div>
       <div className="form-controls">
-        <Link href="/landing">
+        <Link href="/landings">
           <a className="form-control-left button">Cancel</a>
         </Link>
         <button type="submit" className="button button-primary">
