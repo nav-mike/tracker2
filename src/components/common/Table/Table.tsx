@@ -167,7 +167,7 @@ const Table: FC<ITableProps> = ({ data, onDelete }) => {
         <Menu
           id={selectedLanding.id}
           url={selectedLanding.url}
-          hrefPrefix="landing"
+          hrefPrefix="landings"
           position={menuPosition}
           ref={menuRef}
           onDelete={handleDelete}
