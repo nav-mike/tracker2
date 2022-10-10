@@ -9,12 +9,13 @@ interface IMenuProps {
   url: string;
   hrefPrefix: string;
   position: MousePosition;
+  onDelete: (id: string) => void;
 }
 
 type Ref = HTMLDivElement;
 
 const Menu = forwardRef<Ref, IMenuProps>(
-  ({ id, url, hrefPrefix, position }, ref) => (
+  ({ id, url, hrefPrefix, position, onDelete }, ref) => (
     <div
       className="flex flex-row gap-2 items-center absolute drop-shadow-xl bg-slate-50 p-2"
       style={{
@@ -48,7 +49,7 @@ const Menu = forwardRef<Ref, IMenuProps>(
       </button>
       <button
         className="button-icon button button-danger"
-        onClick={() => console.log("archive")}
+        onClick={() => onDelete(id)}
         data-type="menu-button"
       >
         <FiArchive /> Archive

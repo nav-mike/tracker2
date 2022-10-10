@@ -10,10 +10,20 @@ import { trpc } from "../../utils/trpc";
 const IndexLandingPage: ProtectedPage = () => {
   const [data, setData] = useState<LandingPage[]>([]);
   const landingPages = trpc.useQuery(["landingPages.index"]);
+  const deleteLandingPage = trpc.useMutation("landingPages.delete");
 
   useEffect(() => {
     if (landingPages.data) setData(landingPages.data);
   }, [landingPages.data]);
+
+  const handleDelete = (id: string) => {
+    deleteLandingPage
+      .mutateAsync({ id })
+      .then(() => {
+        setData(data.filter((landingPage) => landingPage.id !== id));
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <>
@@ -28,7 +38,7 @@ const IndexLandingPage: ProtectedPage = () => {
         </Link>
 
         <div className="flex w-full p-2">
-          <Table data={data} />
+          <Table data={data} onDelete={handleDelete} />
         </div>
       </div>
     </>

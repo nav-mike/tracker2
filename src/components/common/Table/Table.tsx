@@ -13,9 +13,10 @@ import Menu from "./Menu";
 
 interface ITableProps {
   data: LandingPage[];
+  onDelete: (id: string) => void;
 }
 
-const Table: FC<ITableProps> = ({ data }) => {
+const Table: FC<ITableProps> = ({ data, onDelete }) => {
   const columnHelper = useMemo<ColumnHelper<LandingPage>>(
     () => createColumnHelper<LandingPage>(),
     []
@@ -117,6 +118,11 @@ const Table: FC<ITableProps> = ({ data }) => {
     setShowMenu(true);
   };
 
+  const handleDelete = (id: string) => {
+    onDelete(id);
+    setShowMenu(false);
+  };
+
   return (
     <>
       <table className="w-full" ref={tableRef}>
@@ -164,6 +170,7 @@ const Table: FC<ITableProps> = ({ data }) => {
           hrefPrefix="landing"
           position={menuPosition}
           ref={menuRef}
+          onDelete={handleDelete}
         />
       )}
     </>

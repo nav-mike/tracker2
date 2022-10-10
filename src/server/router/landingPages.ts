@@ -49,4 +49,17 @@ export const landingPagesRouter = createProtectedRouter()
       });
       return landing;
     },
+  })
+  .mutation("delete", {
+    input: z.object({
+      id: z.string(),
+    }),
+    resolve: async ({ ctx, input }) => {
+      const landing = await ctx.prisma.landingPage.delete({
+        where: {
+          id: input.id,
+        },
+      });
+      return landing;
+    },
   });
