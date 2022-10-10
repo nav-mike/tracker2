@@ -1,9 +1,9 @@
-import { getCodeList } from "country-list";
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Select from "react-select";
 import Link from "next/link";
 import ErrorInputMessage from "./ErrorInputMessage";
+import { useCountries } from "../../hooks/useCountries";
 
 export type FormInputs = {
   name: string;
@@ -32,7 +32,7 @@ const LandingForm: FC<ILandingFormProps> = ({ landingPage, onSubmit }) => {
     handleSubmit: onSubmitForm,
     formState: { errors },
   } = useForm<FormInputs>();
-  const countries = useMemo(() => getCodeList(), []);
+  const { countriesOptions, findCountry } = useCountries();
 
   return (
     <form className="form" onSubmit={onSubmitForm(onSubmit)}>
@@ -60,22 +60,14 @@ const LandingForm: FC<ILandingFormProps> = ({ landingPage, onSubmit }) => {
           Countries:
         </label>
         <Controller
+          defaultValue={landingPage?.countries.map(findCountry)}
           name="countries"
           control={control}
           render={({ field }) => (
             <Select
               {...field}
               isMulti
-              options={Object.entries(countries).map(([code, name]) => ({
-                value: code,
-                label: `${name} [${code.toUpperCase()}]`,
-              }))}
-              value={landingPage?.countries.map((country) => ({
-                value: country,
-                label: `${
-                  countries[country.toLowerCase()]
-                } [${country.toUpperCase()}]`,
-              }))}
+              options={countriesOptions}
               id="countries"
             />
           )}
