@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { commonLayout } from "../../components/common/Layout";
+import OfferForm from "../../components/form/OfferForm";
 import { ProtectedPage } from "../../types/auth-required";
 
 const IndexOfferPage: ProtectedPage = () => {
