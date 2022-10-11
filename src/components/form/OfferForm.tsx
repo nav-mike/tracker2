@@ -1,31 +1,29 @@
+import Link from "next/link";
 import { FC } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Select from "react-select";
-import Link from "next/link";
-import ErrorInputMessage from "./ErrorInputMessage";
 import { useCountries } from "../../hooks/useCountries";
+import ErrorInputMessage from "./ErrorInputMessage";
 
 export type FormInputs = {
   name: string;
   countries?: { label: string; value: string }[];
-  offersCount?: number;
   url: string;
 };
 
-export type LandingPageType = {
+export type OfferPageType = {
   id: string;
   name: string;
   countries: string[];
-  offersCount: number | null;
   url: string;
 };
 
-interface ILandingFormProps {
-  landingPage?: LandingPageType;
+interface IOfferFormProps {
+  offerPage?: OfferPageType;
   onSubmit: SubmitHandler<FormInputs>;
 }
 
-const LandingForm: FC<ILandingFormProps> = ({ landingPage, onSubmit }) => {
+const OfferForm: FC<IOfferFormProps> = ({ offerPage, onSubmit }) => {
   const {
     control,
     register,
@@ -45,22 +43,23 @@ const LandingForm: FC<ILandingFormProps> = ({ landingPage, onSubmit }) => {
             type="text"
             id="name"
             className={`form-control ${errors.name ? "border-red-500" : ""}`}
-            defaultValue={landingPage?.name}
+            defaultValue={offerPage?.name}
             {...register("name", { required: true, maxLength: 80 })}
           />
           {errors.name && (
             <ErrorInputMessage>
-              Landing page name is required and the max length is 80 symbols
+              Offer page name is required and the max length is 80 symbols
             </ErrorInputMessage>
           )}
         </div>
       </div>
+
       <div className="form-controls">
         <label htmlFor="countries" className="form-control-left">
           Countries:
         </label>
         <Controller
-          defaultValue={landingPage?.countries.map(findCountry)}
+          defaultValue={offerPage?.countries.map(findCountry)}
           name="countries"
           control={control}
           render={({ field }) => (
@@ -73,18 +72,7 @@ const LandingForm: FC<ILandingFormProps> = ({ landingPage, onSubmit }) => {
           )}
         />
       </div>
-      <div className="form-controls">
-        <label htmlFor="offersCount" className="form-control-left">
-          Offers count:
-        </label>
-        <input
-          type="number"
-          id="offersCount"
-          className="form-control"
-          defaultValue={landingPage?.offersCount ?? ""}
-          {...register("offersCount", { required: false })}
-        />
-      </div>
+
       <div className="form-controls">
         <label htmlFor="url" className="form-control-left">
           URL:
@@ -94,18 +82,19 @@ const LandingForm: FC<ILandingFormProps> = ({ landingPage, onSubmit }) => {
             type="text"
             id="url"
             className={`form-control ${errors.url ? "border-red-500" : ""}`}
-            defaultValue={landingPage?.url}
+            defaultValue={offerPage?.url}
             {...register("url", { required: true, maxLength: 200 })}
           />
           {errors.url && (
             <ErrorInputMessage>
-              URL is required and the max length is 200 symbols
+              Offer page url is required and the max length is 200 symbols
             </ErrorInputMessage>
           )}
         </div>
       </div>
+
       <div className="form-controls">
-        <Link href="/landings">
+        <Link href="/offers">
           <a className="form-control-left button">Cancel</a>
         </Link>
         <button type="submit" className="button button-primary">
@@ -116,4 +105,4 @@ const LandingForm: FC<ILandingFormProps> = ({ landingPage, onSubmit }) => {
   );
 };
 
-export default LandingForm;
+export default OfferForm;
