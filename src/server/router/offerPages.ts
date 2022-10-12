@@ -7,15 +7,28 @@ const CreateOfferDTO = z.object({
   url: z.string(),
 });
 
-export const offerPagesRouter = createProtectedRouter().mutation("create", {
-  input: CreateOfferDTO,
-  resolve: async ({ ctx, input }) => {
-    const offer = await ctx.prisma.offerPage.create({
-      data: {
-        ...input,
-        userId: ctx.session.user.id,
-      },
-    });
-    return offer;
-  },
-});
+export const offerPagesRouter = createProtectedRouter()
+  .mutation("create", {
+    input: CreateOfferDTO,
+    resolve: async ({ ctx, input }) => {
+      const offer = await ctx.prisma.offerPage.create({
+        data: {
+          ...input,
+          userId: ctx.session.user.id,
+        },
+      });
+      return offer;
+    },
+  })
+  .query("index", {
+    resolve: async ({ ctx }) => {
+      if (!ctx.session.user) return [];
+
+      const offerPages = await ctx.prisma.offerPage.findMany({
+        where: {
+          userId: ctx.session.user.id,
+        },
+      });
+      return offerPages;
+    },
+  });

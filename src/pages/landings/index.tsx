@@ -38,7 +38,7 @@ const IndexLandingPage: ProtectedPage = () => {
         </Link>
 
         <div className="flex w-full p-2">
-          <Table data={data} onDelete={handleDelete} />
+          <Table type="landings" data={data} onDelete={handleDelete} />
         </div>
       </div>
     </>

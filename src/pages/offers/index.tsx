@@ -1,10 +1,26 @@
+import { LandingPage, OfferPage } from "@prisma/client";
 import Head from "next/head";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { commonLayout } from "../../components/common/Layout";
-import OfferForm from "../../components/form/OfferForm";
+import Table from "../../components/common/Table/Table";
 import { ProtectedPage } from "../../types/auth-required";
+import { trpc } from "../../utils/trpc";
 
 const IndexOfferPage: ProtectedPage = () => {
+  const [data, setData] = useState<OfferPage[]>([]);
+  const offerPages = trpc.useQuery(["offerPages.index"]);
+
+  useEffect(() => {
+    if (offerPages.data) setData(offerPages.data);
+  }, [offerPages.data]);
+
+  const handleDelete = (id: string) => {
+    console.log(id);
+  };
+
+  console.log(data);
+
   return (
     <>
       <Head>
@@ -18,7 +34,11 @@ const IndexOfferPage: ProtectedPage = () => {
         </Link>
 
         <div className="flex w-full p-2">
-          <p>TODO</p>
+          <Table
+            type="offers"
+            data={data as LandingPage[]}
+            onDelete={handleDelete}
+          />
         </div>
       </div>
     </>
