@@ -31,4 +31,21 @@ export const offerPagesRouter = createProtectedRouter()
       });
       return offerPages;
     },
+  })
+  .mutation("update", {
+    input: z.object({
+      id: z.string(),
+      offer: CreateOfferDTO,
+    }),
+    resolve: async ({ ctx, input }) => {
+      const offer = await ctx.prisma.offerPage.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          ...input.offer,
+        },
+      });
+      return offer;
+    },
   });
