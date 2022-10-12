@@ -15,9 +15,15 @@ interface ITableProps {
   data: LandingPage[];
   onDelete: (id: string) => void;
   type: string;
+  showPreview?: boolean;
 }
 
-const Table: FC<ITableProps> = ({ data, type, onDelete }) => {
+const Table: FC<ITableProps> = ({
+  data,
+  type,
+  onDelete,
+  showPreview = true,
+}) => {
   const columnHelper = useMemo<ColumnHelper<LandingPage>>(
     () => createColumnHelper<LandingPage>(),
     []
@@ -172,6 +178,7 @@ const Table: FC<ITableProps> = ({ data, type, onDelete }) => {
           position={menuPosition}
           ref={menuRef}
           onDelete={handleDelete}
+          showPreview={showPreview}
         />
       )}
     </>

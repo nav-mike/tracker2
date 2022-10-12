@@ -10,12 +10,13 @@ interface IMenuProps {
   hrefPrefix: string;
   position: MousePosition;
   onDelete: (id: string) => void;
+  showPreview?: boolean;
 }
 
 type Ref = HTMLDivElement;
 
 const Menu = forwardRef<Ref, IMenuProps>(
-  ({ id, url, hrefPrefix, position, onDelete }, ref) => (
+  ({ id, url, hrefPrefix, position, onDelete, showPreview = true }, ref) => (
     <div
       className="flex flex-row gap-2 items-center absolute drop-shadow-xl bg-slate-50 p-2"
       style={{
@@ -24,14 +25,16 @@ const Menu = forwardRef<Ref, IMenuProps>(
       }}
       ref={ref}
     >
-      <Link href={url} target="_blank">
-        <a
-          className="button button-warning button-icon"
-          data-type="menu-button"
-        >
-          <FiExternalLink /> Preview
-        </a>
-      </Link>
+      {showPreview && (
+        <Link href={url} target="_blank">
+          <a
+            className="button button-warning button-icon"
+            data-type="menu-button"
+          >
+            <FiExternalLink /> Preview
+          </a>
+        </Link>
+      )}
       <Link href={`/${hrefPrefix}/${id}/edit`}>
         <a
           className="button button-primary button-icon"

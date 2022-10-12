@@ -42,6 +42,7 @@ const IndexOfferPage: ProtectedPage = () => {
             type="offers"
             data={data as LandingPage[]}
             onDelete={handleDelete}
+            showPreview={false}
           />
         </div>
       </div>
