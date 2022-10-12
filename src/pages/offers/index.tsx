@@ -10,16 +10,20 @@ import { trpc } from "../../utils/trpc";
 const IndexOfferPage: ProtectedPage = () => {
   const [data, setData] = useState<OfferPage[]>([]);
   const offerPages = trpc.useQuery(["offerPages.index"]);
+  const deleteOfferPage = trpc.useMutation("offerPages.delete");
 
   useEffect(() => {
     if (offerPages.data) setData(offerPages.data);
   }, [offerPages.data]);
 
   const handleDelete = (id: string) => {
-    console.log(id);
+    deleteOfferPage
+      .mutateAsync({ id })
+      .then(() => {
+        setData(data.filter((offerPage) => offerPage.id !== id));
+      })
+      .catch((err) => console.log(err));
   };
-
-  console.log(data);
 
   return (
     <>

@@ -48,4 +48,17 @@ export const offerPagesRouter = createProtectedRouter()
       });
       return offer;
     },
+  })
+  .mutation("delete", {
+    input: z.object({
+      id: z.string(),
+    }),
+    resolve: async ({ ctx, input }) => {
+      const offer = await ctx.prisma.offerPage.delete({
+        where: {
+          id: input.id,
+        },
+      });
+      return offer;
+    },
   });
