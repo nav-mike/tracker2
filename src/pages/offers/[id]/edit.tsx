@@ -64,6 +64,7 @@ export const getServerSideProps: GetServerSideProps<
     where: { id },
   });
   if (!offer) return { notFound: true };
+  if (offer.userId !== session.user?.id) return { notFound: true };
 
   return {
     props: {

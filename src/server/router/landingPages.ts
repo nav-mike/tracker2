@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { createProtectedRouter } from "./context";
 
@@ -39,6 +40,11 @@ export const landingPagesRouter = createProtectedRouter()
       landing: CreateLandingDTO,
     }),
     resolve: async ({ ctx, input }) => {
+      if (!ctx.session.user.id) return null;
+
+      if (!isLandingPresented(input.id, ctx.session.user.id, ctx.prisma))
+        return null;
+
       const landing = await ctx.prisma.landingPage.update({
         where: {
           id: input.id,
@@ -55,6 +61,11 @@ export const landingPagesRouter = createProtectedRouter()
       id: z.string(),
     }),
     resolve: async ({ ctx, input }) => {
+      if (!ctx.session.user.id) return null;
+
+      if (!isLandingPresented(input.id, ctx.session.user.id, ctx.prisma))
+        return null;
+
       const landing = await ctx.prisma.landingPage.delete({
         where: {
           id: input.id,
@@ -63,3 +74,16 @@ export const landingPagesRouter = createProtectedRouter()
       return landing;
     },
   });
+
+export const isLandingPresented = async (
+  id: string,
+  userId: string,
+  prisma: PrismaClient
+) => {
+  const landing = await prisma.landingPage.findUnique({
+    where: {
+      id,
+    },
+  });
+  return landing?.userId === userId;
+};

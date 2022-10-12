@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { createProtectedRouter } from "./context";
 
@@ -38,6 +39,11 @@ export const offerPagesRouter = createProtectedRouter()
       offer: CreateOfferDTO,
     }),
     resolve: async ({ ctx, input }) => {
+      if (!ctx.session.user.id) return null;
+
+      if (!isOfferPresented(input.id, ctx.session.user.id, ctx.prisma))
+        return null;
+
       const offer = await ctx.prisma.offerPage.update({
         where: {
           id: input.id,
@@ -54,6 +60,11 @@ export const offerPagesRouter = createProtectedRouter()
       id: z.string(),
     }),
     resolve: async ({ ctx, input }) => {
+      if (!ctx.session.user.id) return null;
+
+      if (!isOfferPresented(input.id, ctx.session.user.id, ctx.prisma))
+        return null;
+
       const offer = await ctx.prisma.offerPage.delete({
         where: {
           id: input.id,
@@ -62,3 +73,16 @@ export const offerPagesRouter = createProtectedRouter()
       return offer;
     },
   });
+
+export const isOfferPresented = async (
+  id: string,
+  userId: string,
+  prisma: PrismaClient
+) => {
+  const offer = await prisma.offerPage.findUnique({
+    where: {
+      id,
+    },
+  });
+  return offer?.userId === userId;
+};

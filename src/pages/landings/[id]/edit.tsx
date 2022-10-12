@@ -65,6 +65,7 @@ export const getServerSideProps: GetServerSideProps<
 
   const landingPage = await prisma?.landingPage.findUnique({ where: { id } });
   if (!landingPage) return { notFound: true };
+  if (landingPage.userId !== session.user?.id) return { notFound: true };
 
   return {
     props: {
