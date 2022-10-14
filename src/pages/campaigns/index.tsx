@@ -12,7 +12,7 @@ const IndexCampaignPage: ProtectedPage = () => {
 
       <div className="p-4 flex flex-col gap-4">
         <h1 className="text-2xl">Campaigns</h1>
-        <Link href="/campaings/new">
+        <Link href="/campaigns/new">
           <a className="button button-success max-w-[4rem]">Create</a>
         </Link>
 
