@@ -3,21 +3,24 @@ import Link from "next/link";
 import { FC, useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Select from "react-select";
+import { BsPlusSquare } from "react-icons/bs";
 import { useCountries } from "../../hooks/useCountries";
 import { trpc } from "../../utils/trpc";
 import ErrorInputMessage from "./ErrorInputMessage";
 
+type Path = { id?: string; landingPageId: string; offerPageId: string };
+
 export type FormInputs = {
   name: string;
   countries?: { label: string; value: string }[];
-  paths: { landingPageId: string; offerPageId: string }[];
+  paths: Path[];
 };
 
 export type CampaignType = {
   id: string;
   name: string;
   countries: string[];
-  paths: { landingPageId: string; offerPageId: string }[];
+  paths: Path[];
 };
 
 interface ICampaignFormProps {
@@ -37,7 +40,7 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
     formState: { errors },
   } = useForm<FormInputs>();
   const { countriesOptions, findCountry } = useCountries();
-
+  const [paths, setPaths] = useState<Path[]>(campaign?.paths ?? []);
   useEffect(() => {
     if (landingPages.data) setLandingPagesData(landingPages.data);
   }, [landingPages.data]);
@@ -45,6 +48,10 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
   useEffect(() => {
     if (offerPages.data) setOfferPagesData(offerPages.data);
   }, [offerPages.data]);
+
+  const handleAddPath = () => {
+    setPaths((prev) => [...prev, { landingPageId: "", offerPageId: "" }]);
+  };
 
   return (
     <form className="form" onSubmit={onSubmitForm(onSubmit)}>
@@ -91,8 +98,37 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
         <label htmlFor="paths" className="form-control-left">
           Paths:
         </label>
-        <div className="" id="paths">
+        <div className="flex flex-col gap-4" id="paths">
+          <button
+            className="text-gray-300 active:text-gray-500"
+            title="Add path to campaign"
+            type="button"
+            onClick={handleAddPath}
+          >
+            <BsPlusSquare size="2em" />
+          </button>
+          {paths.map((path, index) => (
+            <div key={path.id || index} className="flex flex-row gap-2">
+              <select
+                defaultValue={path.landingPageId}
+                name="paths.landingPageId"
+              >
+                {landingPagesData.map((landingPage) => (
+                  <option key={landingPage.id} value={landingPage.id}>
+                    {landingPage.name}
+                  </option>
+                ))}
+              </select>
 
+              <select defaultValue={path.offerPageId} name="paths.offerPageId">
+                {offerPagesData.map((offerPage) => (
+                  <option key={offerPage.id} value={offerPage.id}>
+                    {offerPage.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
         </div>
       </div>
 
