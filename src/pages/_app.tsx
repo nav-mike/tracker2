@@ -12,6 +12,7 @@ import "../styles/globals.css";
 import { AppProps } from "next/app";
 import { AuthRequired } from "../types/auth-required";
 import Auth from "../components/auth/Auth";
+import { Session } from "next-auth";
 
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
   P,
@@ -20,11 +21,11 @@ export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
   getLayout?: (page: ReactElement) => ReactElement<any, any> | null;
 };
 
-type AppPropsWithLayout = AppProps & {
+type AppPropsWithLayout = AppProps<{ session: Session }> & {
   Component: NextPageWithLayout & AuthRequired;
 };
 
-const MyApp: AppType = ({
+const MyApp: AppType<any> = ({
   Component,
   pageProps: { session, ...pageProps },
 }: AppPropsWithLayout) => {
