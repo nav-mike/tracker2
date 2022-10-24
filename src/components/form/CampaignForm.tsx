@@ -1,21 +1,23 @@
+import { LandingPage, OfferPage } from "@prisma/client";
 import Link from "next/link";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Select from "react-select";
 import { useCountries } from "../../hooks/useCountries";
+import { trpc } from "../../utils/trpc";
 import ErrorInputMessage from "./ErrorInputMessage";
 
 export type FormInputs = {
   name: string;
   countries?: { label: string; value: string }[];
-  pathId: string;
+  paths: { landingPageId: string; offerPageId: string }[];
 };
 
 export type CampaignType = {
   id: string;
   name: string;
   countries: string[];
-  pathId: string;
+  paths: { landingPageId: string; offerPageId: string }[];
 };
 
 interface ICampaignFormProps {
@@ -24,6 +26,10 @@ interface ICampaignFormProps {
 }
 
 const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
+  const [landingPagesData, setLandingPagesData] = useState<LandingPage[]>([]);
+  const [offerPagesData, setOfferPagesData] = useState<OfferPage[]>([]);
+  const landingPages = trpc.useQuery(["landingPages.index"]);
+  const offerPages = trpc.useQuery(["offerPages.index"]);
   const {
     control,
     register,
@@ -31,6 +37,14 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
     formState: { errors },
   } = useForm<FormInputs>();
   const { countriesOptions, findCountry } = useCountries();
+
+  useEffect(() => {
+    if (landingPages.data) setLandingPagesData(landingPages.data);
+  }, [landingPages.data]);
+
+  useEffect(() => {
+    if (offerPages.data) setOfferPagesData(offerPages.data);
+  }, [offerPages.data]);
 
   return (
     <form className="form" onSubmit={onSubmitForm(onSubmit)}>
@@ -71,6 +85,15 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
             />
           )}
         />
+      </div>
+
+      <div className="form-controls">
+        <label htmlFor="paths" className="form-control-left">
+          Paths:
+        </label>
+        <div className="" id="paths">
+
+        </div>
       </div>
 
       <div className="form-controls">
