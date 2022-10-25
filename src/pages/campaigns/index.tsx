@@ -1,9 +1,24 @@
+import { Campaign, LandingPage } from "@prisma/client";
 import Head from "next/head";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { commonLayout } from "../../components/common/Layout";
+import Table from "../../components/common/Table/Table";
 import { ProtectedPage } from "../../types/auth-required";
+import { trpc } from "../../utils/trpc";
 
 const IndexCampaignPage: ProtectedPage = () => {
+  const [data, setData] = useState<Campaign[]>([]);
+  const campaigns = trpc.useQuery(["campaigns.index"]);
+
+  useEffect(() => {
+    if (campaigns.data) setData(campaigns.data);
+  }, [campaigns.data]);
+
+  const handleDelete = (id: string) => {
+    console.log(id);
+  };
+
   return (
     <>
       <Head>
@@ -17,7 +32,12 @@ const IndexCampaignPage: ProtectedPage = () => {
         </Link>
 
         <div className="flex w-full p-2">
-          <p>TODO: Campaigns Table</p>
+          <Table
+            type="campaigns"
+            data={data as LandingPage[]}
+            showPreview={false}
+            onDelete={handleDelete}
+          />
         </div>
       </div>
     </>

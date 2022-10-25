@@ -55,7 +55,7 @@ const Menu = forwardRef<Ref, IMenuProps>(
         onClick={() => onDelete(id)}
         data-type="menu-button"
       >
-        <FiArchive /> Archive
+        <FiArchive /> Delete
       </button>
     </div>
   )
