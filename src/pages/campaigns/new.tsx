@@ -1,11 +1,26 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { SubmitHandler } from "react-hook-form";
 import { commonLayout } from "../../components/common/Layout";
 import CampaignForm, { FormInputs } from "../../components/form/CampaignForm";
 import { ProtectedPage } from "../../types/auth-required";
+import { trpc } from "../../utils/trpc";
 
 const NewCampaignPage: ProtectedPage = () => {
-  const handleSubmit: SubmitHandler<FormInputs> = (data) => console.log(data);
+  const createCampaign = trpc.useMutation("campaigns.create");
+  const router = useRouter();
+
+  const handleSubmit: SubmitHandler<FormInputs> = (data) => {
+    const campaign = {
+      ...data,
+      countries: data.countries?.map((country) => country.value.toUpperCase()),
+    };
+
+    createCampaign
+      .mutateAsync(campaign)
+      .then(() => router.push("/campaigns"))
+      .catch((err: Error) => console.log(err));
+  };
 
   return (
     <>
