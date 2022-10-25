@@ -1,12 +1,32 @@
 import { LandingPage, OfferPage } from "@prisma/client";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import {
+  Controller,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
 import Select from "react-select";
 import { BsPlusSquare } from "react-icons/bs";
+import { BiMinusCircle } from "react-icons/bi";
 import { useCountries } from "../../hooks/useCountries";
 import { trpc } from "../../utils/trpc";
 import ErrorInputMessage from "./ErrorInputMessage";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const campaignSchema = z.object({
+  name: z.string().min(1).max(80),
+  countries: z.array(z.object({ label: z.string(), value: z.string() })),
+  paths: z.array(
+    z.object({
+      id: z.string().optional(),
+      landingPageId: z.string(),
+      offerPageId: z.string(),
+    })
+  ),
+});
 
 type Path = { id?: string; landingPageId: string; offerPageId: string };
 
@@ -25,7 +45,7 @@ export type CampaignType = {
 
 interface ICampaignFormProps {
   campaign?: CampaignType;
-  onSubmit: SubmitHandler<FormInputs>;
+  onSubmit: SubmitHandler<any>;
 }
 
 const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
@@ -38,9 +58,11 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
     register,
     handleSubmit: onSubmitForm,
     formState: { errors },
-  } = useForm<FormInputs>();
+  } = useForm({ resolver: zodResolver(campaignSchema) });
   const { countriesOptions, findCountry } = useCountries();
   const [paths, setPaths] = useState<Path[]>(campaign?.paths ?? []);
+  const { fields, append, remove } = useFieldArray({ name: "paths", control });
+
   useEffect(() => {
     if (landingPages.data) setLandingPagesData(landingPages.data);
   }, [landingPages.data]);
@@ -50,7 +72,7 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
   }, [offerPages.data]);
 
   const handleAddPath = () => {
-    setPaths((prev) => [...prev, { landingPageId: "", offerPageId: "" }]);
+    append({ landingPageId: "", offerPageId: "" });
   };
 
   return (
@@ -107,26 +129,30 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
           >
             <BsPlusSquare size="2em" />
           </button>
-          {paths.map((path, index) => (
-            <div key={path.id || index} className="flex flex-row gap-2">
-              <select
-                defaultValue={path.landingPageId}
-                name="paths.landingPageId"
-              >
+
+          {fields.map((_field, index) => (
+            <div key={index} className="flex flex-row gap-2">
+              <select {...register(`paths[${index}].landingPageId`)}>
                 {landingPagesData.map((landingPage) => (
                   <option key={landingPage.id} value={landingPage.id}>
                     {landingPage.name}
                   </option>
                 ))}
               </select>
-
-              <select defaultValue={path.offerPageId} name="paths.offerPageId">
+              <select {...register(`paths[${index}].offerPageId`)}>
                 {offerPagesData.map((offerPage) => (
                   <option key={offerPage.id} value={offerPage.id}>
                     {offerPage.name}
                   </option>
                 ))}
               </select>
+              <button
+                type="button"
+                className="text-gray-300 hover:text-gray-500"
+                onClick={() => remove(index)}
+              >
+                <BiMinusCircle />
+              </button>
             </div>
           ))}
         </div>
