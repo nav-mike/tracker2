@@ -53,14 +53,24 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
   const [offerPagesData, setOfferPagesData] = useState<OfferPage[]>([]);
   const landingPages = trpc.useQuery(["landingPages.index"]);
   const offerPages = trpc.useQuery(["offerPages.index"]);
+  const { countriesOptions, findCountry } = useCountries();
   const {
     control,
     register,
     handleSubmit: onSubmitForm,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(campaignSchema) });
-  const { countriesOptions, findCountry } = useCountries();
-  const [paths, setPaths] = useState<Path[]>(campaign?.paths ?? []);
+  } = useForm<FormInputs>({
+    resolver: zodResolver(campaignSchema),
+    defaultValues: {
+      name: campaign?.name,
+      countries: campaign?.countries.map(findCountry),
+      paths: campaign?.paths.map((path) => ({
+        id: path.id,
+        landingPageId: path.landingPageId,
+        offerPageId: path.offerPageId,
+      })),
+    },
+  });
   const { fields, append, remove } = useFieldArray({ name: "paths", control });
 
   useEffect(() => {
@@ -72,7 +82,7 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
   }, [offerPages.data]);
 
   const handleAddPath = () => {
-    append({ landingPageId: "", offerPageId: "" });
+    append({ id: "", landingPageId: "", offerPageId: "" });
   };
 
   return (
@@ -130,22 +140,38 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
             <BsPlusSquare size="2em" />
           </button>
 
-          {fields.map((_field, index) => (
+          {fields.map((item, index) => (
             <div key={index} className="flex flex-row gap-2">
-              <select {...register(`paths[${index}].landingPageId`)}>
-                {landingPagesData.map((landingPage) => (
-                  <option key={landingPage.id} value={landingPage.id}>
-                    {landingPage.name}
-                  </option>
-                ))}
-              </select>
-              <select {...register(`paths[${index}].offerPageId`)}>
-                {offerPagesData.map((offerPage) => (
-                  <option key={offerPage.id} value={offerPage.id}>
-                    {offerPage.name}
-                  </option>
-                ))}
-              </select>
+              <Controller
+                render={({ field }) => (
+                  <select {...field}>
+                    {landingPagesData.map((landingPage) => (
+                      <option key={landingPage.id} value={landingPage.id}>
+                        {landingPage.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                defaultValue={item.landingPageId}
+                name={`paths.${index}.landingPageId`}
+                control={control}
+              />
+
+              <Controller
+                render={({ field }) => (
+                  <select {...field}>
+                    {offerPagesData.map((offerPage) => (
+                      <option key={offerPage.id} value={offerPage.id}>
+                        {offerPage.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                defaultValue={item.offerPageId}
+                name={`paths.${index}.offerPageId`}
+                control={control}
+              />
+
               <button
                 type="button"
                 className="text-gray-300 hover:text-gray-500"
