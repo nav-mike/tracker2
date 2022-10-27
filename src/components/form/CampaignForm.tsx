@@ -45,7 +45,7 @@ export type CampaignType = {
 
 interface ICampaignFormProps {
   campaign?: CampaignType;
-  onSubmit: SubmitHandler<any>;
+  onSubmit: SubmitHandler<FormInputs>;
 }
 
 const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {

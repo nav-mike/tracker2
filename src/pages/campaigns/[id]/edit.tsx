@@ -5,6 +5,7 @@ import { SubmitHandler } from "react-hook-form";
 import { commonLayout } from "../../../components/common/Layout";
 import CampaignForm, {
   CampaignType,
+  FormInputs,
 } from "../../../components/form/CampaignForm";
 import { ProtectedPage } from "../../../types/auth-required";
 import { authOptions } from "../../api/auth/[...nextauth]";
@@ -14,7 +15,7 @@ const EditCampaignPage: ProtectedPage<{ campaign: CampaignType }> = ({
 }) => {
   console.log(campaign);
 
-  const handleSubmit: SubmitHandler<any> = (data) => {
+  const handleSubmit: SubmitHandler<FormInputs> = (data) => {
     console.log(data);
   };
 
