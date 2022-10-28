@@ -1,6 +1,7 @@
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { SubmitHandler } from "react-hook-form";
 import { commonLayout } from "../../../components/common/Layout";
 import CampaignForm, {
@@ -8,15 +9,24 @@ import CampaignForm, {
   FormInputs,
 } from "../../../components/form/CampaignForm";
 import { ProtectedPage } from "../../../types/auth-required";
+import { trpc } from "../../../utils/trpc";
 import { authOptions } from "../../api/auth/[...nextauth]";
 
 const EditCampaignPage: ProtectedPage<{ campaign: CampaignType }> = ({
   campaign,
 }) => {
-  console.log(campaign);
+  const updateCampaign = trpc.useMutation("campaigns.update");
+  const router = useRouter();
 
   const handleSubmit: SubmitHandler<FormInputs> = (data) => {
-    console.log(data);
+    const updatedCampaign = {
+      ...data,
+      countries: data.countries?.map((country) => country.value.toUpperCase()),
+    };
+    updateCampaign
+      .mutateAsync({ id: campaign.id, campaign: updatedCampaign })
+      .then(() => router.push("/campaigns"))
+      .catch((err) => console.log(err));
   };
 
   return (

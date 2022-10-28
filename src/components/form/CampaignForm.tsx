@@ -141,7 +141,7 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
           </button>
 
           {fields.map((item, index) => (
-            <div key={index} className="flex flex-row gap-2">
+            <div key={item.id} className="flex flex-row gap-2">
               <Controller
                 render={({ field }) => (
                   <select {...field}>

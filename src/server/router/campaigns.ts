@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { createProtectedRouter } from "./context";
 
@@ -31,15 +32,7 @@ export const campaignsRouter = createProtectedRouter()
           campaignId: campaign.id,
         })),
       });
-      const result = await ctx.prisma.campaign.findUnique({
-        where: {
-          id: campaign.id,
-        },
-        include: {
-          paths: true,
-        },
-      });
-      return result;
+      return campaign;
     },
   })
   .query("index", {
@@ -53,4 +46,84 @@ export const campaignsRouter = createProtectedRouter()
       });
       return campaigns;
     },
+  })
+  .mutation("update", {
+    input: z.object({
+      id: z.string(),
+      campaign: CreateCampaignDTO,
+    }),
+    resolve: async ({ ctx, input }) => {
+      if (!ctx.session.user.id) return null;
+
+      if (!isCampaignPresented(input.id, ctx.session.user.id, ctx.prisma))
+        return null;
+
+      const result = await ctx.prisma.campaign.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          name: input.campaign.name,
+          countries: input.campaign.countries,
+        },
+      });
+
+      const campaign = await ctx.prisma.campaign.findUnique({
+        where: { id: input.id },
+        include: { paths: true },
+      });
+      if (!campaign) return null;
+
+      await ctx.prisma.path.deleteMany({
+        where: {
+          id: {
+            in: campaign.paths
+              .map((path) => path.id)
+              .filter((id) => {
+                return !input.campaign.paths.some((path) => path.id === id);
+              }),
+          },
+        },
+      });
+
+      await ctx.prisma.path.createMany({
+        data: input.campaign.paths
+          .filter((path) => !path.id)
+          .map((path) => ({
+            landingPageId: path.landingPageId,
+            offerPageId: path.offerPageId,
+            campaignId: campaign.id,
+          })),
+      });
+
+      input.campaign.paths.forEach(async (path) => {
+        if (path.id) {
+          await ctx.prisma.path.update({
+            where: {
+              id: path.id,
+            },
+            data: {
+              landingPageId: path.landingPageId,
+              offerPageId: path.offerPageId,
+            },
+          });
+        }
+      });
+
+      return result;
+    },
   });
+
+const isCampaignPresented = async (
+  id: string,
+  userId: string,
+  prisma: PrismaClient
+) => {
+  const campaign = await prisma.campaign.findFirst({
+    where: {
+      id,
+      userId,
+    },
+  });
+  return !!campaign;
+};
