@@ -82,7 +82,11 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
   }, [offerPages.data]);
 
   const handleAddPath = () => {
-    append({ id: "", landingPageId: "", offerPageId: "" });
+    append({
+      id: "",
+      landingPageId: landingPagesData[0]?.id ?? "",
+      offerPageId: offerPagesData[0]?.id ?? "",
+    });
   };
 
   return (
