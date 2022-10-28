@@ -112,6 +112,25 @@ export const campaignsRouter = createProtectedRouter()
 
       return result;
     },
+  })
+  .mutation("delete", {
+    input: z.object({
+      id: z.string(),
+    }),
+    resolve: async ({ ctx, input }) => {
+      if (!ctx.session.user.id) return null;
+
+      if (!isCampaignPresented(input.id, ctx.session.user.id, ctx.prisma))
+        return null;
+
+      const result = await ctx.prisma.campaign.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return result;
+    },
   });
 
 const isCampaignPresented = async (
