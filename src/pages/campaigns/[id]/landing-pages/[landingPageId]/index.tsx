@@ -2,7 +2,7 @@ import { LandingPage } from "@prisma/client";
 import { GetServerSideProps } from "next";
 
 const ShowLandingPagePage = () => {
-  return <div>TODO</div>;
+  return <div>Loading...</div>;
 };
 
 export default ShowLandingPagePage;
