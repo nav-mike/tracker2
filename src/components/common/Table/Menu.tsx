@@ -26,10 +26,11 @@ const Menu = forwardRef<Ref, IMenuProps>(
       ref={ref}
     >
       {showPreview && (
-        <Link href={url} target="_blank">
+        <Link href={url ?? `${hrefPrefix}/${id}`}>
           <a
             className="button button-warning button-icon"
             data-type="menu-button"
+            target="_blank"
           >
             <FiExternalLink /> Preview
           </a>

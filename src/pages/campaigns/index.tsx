@@ -40,8 +40,8 @@ const IndexCampaignPage: ProtectedPage = () => {
         <div className="flex w-full p-2">
           <Table
             type="campaigns"
-            data={data as LandingPage[]}
-            showPreview={false}
+            data={data as unknown as LandingPage[]}
+            showPreview={true}
             onDelete={handleDelete}
           />
         </div>

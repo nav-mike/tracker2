@@ -13,7 +13,7 @@ const CreateCampaignDTO = z.object({
     })
   ),
 });
-
+// TODO: fix cost and revenue
 export const campaignsRouter = createProtectedRouter()
   .mutation("create", {
     input: CreateCampaignDTO,
