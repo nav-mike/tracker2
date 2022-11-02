@@ -9,7 +9,6 @@ import LandingForm from "../../components/form/LandingForm";
 type Inputs = {
   name: string;
   countries?: { label: string; value: string }[];
-  offersCount?: number;
   url: string;
 };
 
@@ -21,7 +20,6 @@ const NewLandingPage: ProtectedPage = () => {
     const landingPage = {
       ...data,
       countries: data.countries?.map((country) => country.value.toUpperCase()),
-      offersCount: data.offersCount ? +data.offersCount : null,
     };
     createLandingPage
       .mutateAsync(landingPage)

@@ -5,7 +5,6 @@ import { createProtectedRouter } from "./context";
 const CreateLandingDTO = z.object({
   name: z.string(),
   countries: z.array(z.string()).default(["ALL"]),
-  offersCount: z.number().nullish(),
   url: z.string(),
 });
 

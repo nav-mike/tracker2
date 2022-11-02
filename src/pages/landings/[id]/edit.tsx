@@ -22,7 +22,6 @@ const EditLandingPage: ProtectedPage<{ landing: LandingPageType }> = ({
     const landingPage = {
       ...data,
       countries: data.countries?.map((country) => country.value.toUpperCase()),
-      offersCount: data.offersCount ? +data.offersCount : null,
     };
     updateLandingPage
       .mutateAsync({ id: landing.id, landing: landingPage })
@@ -73,7 +72,6 @@ export const getServerSideProps: GetServerSideProps<
         id: landingPage.id,
         name: landingPage.name,
         countries: landingPage.countries as string[],
-        offersCount: landingPage.offersCount,
         url: landingPage.url,
       },
     },

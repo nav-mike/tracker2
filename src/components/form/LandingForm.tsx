@@ -8,7 +8,6 @@ import { useCountries } from "../../hooks/useCountries";
 export type FormInputs = {
   name: string;
   countries?: { label: string; value: string }[];
-  offersCount?: number;
   url: string;
 };
 
@@ -16,7 +15,6 @@ export type LandingPageType = {
   id: string;
   name: string;
   countries: string[];
-  offersCount: number | null;
   url: string;
 };
 
@@ -71,18 +69,6 @@ const LandingForm: FC<ILandingFormProps> = ({ landingPage, onSubmit }) => {
               id="countries"
             />
           )}
-        />
-      </div>
-      <div className="form-controls">
-        <label htmlFor="offersCount" className="form-control-left">
-          Offers count:
-        </label>
-        <input
-          type="number"
-          id="offersCount"
-          className="form-control"
-          defaultValue={landingPage?.offersCount ?? ""}
-          {...register("offersCount", { required: false })}
         />
       </div>
       <div className="form-controls">
