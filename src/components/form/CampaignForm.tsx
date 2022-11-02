@@ -19,6 +19,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 const campaignSchema = z.object({
   name: z.string().min(1).max(80),
   countries: z.array(z.object({ label: z.string(), value: z.string() })),
+  cost: z.number().min(0).optional().default(0),
+  revenue: z.number().min(0).optional().default(0),
   paths: z.array(
     z.object({
       id: z.string().optional(),
@@ -33,6 +35,8 @@ type Path = { id?: string; landingPageId: string; offerPageId: string };
 export type FormInputs = {
   name: string;
   countries?: { label: string; value: string }[];
+  cost?: number;
+  revenue?: number;
   paths: Path[];
 };
 
@@ -40,6 +44,8 @@ export type CampaignType = {
   id: string;
   name: string;
   countries: string[];
+  cost: number;
+  revenue: number;
   paths: Path[];
 };
 
@@ -64,6 +70,8 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
     defaultValues: {
       name: campaign?.name,
       countries: campaign?.countries.map(findCountry),
+      cost: campaign?.cost,
+      revenue: campaign?.revenue,
       paths: campaign?.paths.map((path) => ({
         id: path.id,
         landingPageId: path.landingPageId,
@@ -128,6 +136,46 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
             />
           )}
         />
+      </div>
+
+      <div className="form-controls">
+        <label htmlFor="cost" className="form-control-left">
+          Cost:
+        </label>
+        <div className="flex flex-col">
+          <input
+            type="number"
+            id="cost"
+            className={`form-control ${errors.cost ? "border-red-500" : ""}`}
+            defaultValue={campaign?.cost ?? 0}
+            {...register("cost", { min: 0, valueAsNumber: true })}
+          />
+          {errors.cost && (
+            <ErrorInputMessage>
+              Cost should be more or equal to 0
+            </ErrorInputMessage>
+          )}
+        </div>
+      </div>
+
+      <div className="form-controls">
+        <label htmlFor="revenue" className="form-control-left">
+          Revenue:
+        </label>
+        <div className="flex flex-col">
+          <input
+            type="number"
+            id="revenue"
+            className={`form-control ${errors.revenue ? "border-red-500" : ""}`}
+            defaultValue={campaign?.revenue ?? 0}
+            {...register("revenue", { min: 0, valueAsNumber: true })}
+          />
+          {errors.revenue && (
+            <ErrorInputMessage>
+              Revenue should be more or equal to 0
+            </ErrorInputMessage>
+          )}
+        </div>
       </div>
 
       <div className="form-controls">

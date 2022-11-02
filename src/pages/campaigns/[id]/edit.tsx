@@ -71,6 +71,8 @@ export const getServerSideProps: GetServerSideProps<
           id: campaign.id,
           name: campaign.name,
           countries: campaign.countries as string[],
+          cost: campaign.cost,
+          revenue: campaign.revenue,
           paths: campaign.paths.map((path) => ({
             id: path.id,
             landingPageId: path.landingPageId,

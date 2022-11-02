@@ -5,6 +5,8 @@ import { createProtectedRouter } from "./context";
 const CreateCampaignDTO = z.object({
   name: z.string(),
   countries: z.array(z.string()).default(["ALL"]),
+  cost: z.number().optional().default(0),
+  revenue: z.number().optional().default(0),
   paths: z.array(
     z.object({
       id: z.string().optional(),
@@ -13,7 +15,7 @@ const CreateCampaignDTO = z.object({
     })
   ),
 });
-// TODO: fix cost and revenue
+
 export const campaignsRouter = createProtectedRouter()
   .mutation("create", {
     input: CreateCampaignDTO,
@@ -65,6 +67,8 @@ export const campaignsRouter = createProtectedRouter()
         data: {
           name: input.campaign.name,
           countries: input.campaign.countries,
+          cost: input.campaign.cost,
+          revenue: input.campaign.revenue,
         },
       });
 
