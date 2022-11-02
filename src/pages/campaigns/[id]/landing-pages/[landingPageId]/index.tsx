@@ -41,6 +41,7 @@ export const getServerSideProps: GetServerSideProps<
     data: {
       landingPageId,
       pathId: campaign.paths[0].id,
+      cost: campaign.cost,
       ...(await geoIp(context)),
       ...userDevice(context.req.headers["user-agent"] || ""),
     },

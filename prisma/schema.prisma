@@ -108,8 +108,8 @@ model Campaign {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   paths     Path[]
-  cost      Float    @default(0)
-  revenue   Float    @default(0)
+  cost      Float    @default(0) // TODO: move to landing page
+  revenue   Float    @default(0) // TODO: move to offer page
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
