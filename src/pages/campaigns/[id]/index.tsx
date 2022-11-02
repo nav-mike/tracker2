@@ -6,6 +6,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { IoCopyOutline } from "react-icons/io5";
 import { commonLayout } from "../../../components/common/Layout";
 import { CampaignType } from "../../../components/form/CampaignForm";
+import { findOneCampaign } from "../../../server/campaign/find-one";
 import { ProtectedPage } from "../../../types/auth-required";
 import { authOptions } from "../../api/auth/[...nextauth]";
 
@@ -72,7 +73,6 @@ ShowCampaignPage.getLayout = commonLayout;
 
 export default ShowCampaignPage;
 
-// TODO: move to common function
 export const getServerSideProps: GetServerSideProps<
   { campaign: CampaignType },
   { id: string }
@@ -87,34 +87,26 @@ export const getServerSideProps: GetServerSideProps<
     return { redirect: { destination: "/auth/signin", permanent: false } };
 
   const id = context.params?.id;
-  if (!id) return { notFound: true };
 
-  const campaign = await prisma?.campaign.findUnique({
-    where: { id: id },
-    include: {
-      paths: {
-        include: {
-          landingPage: true,
-          offerPage: true,
+  try {
+    const campaign = await findOneCampaign(id, session);
+
+    return {
+      props: {
+        campaign: {
+          id: campaign.id,
+          name: campaign.name,
+          countries: campaign.countries as string[],
+          paths: campaign.paths.map((path) => ({
+            id: path.id,
+            landingPageId: path.landingPageId,
+            offerPageId: path.offerPageId,
+          })),
         },
       },
-    },
-  });
-  if (!campaign) return { notFound: true };
-  if (campaign.userId !== session.user?.id) return { notFound: true };
-
-  return {
-    props: {
-      campaign: {
-        id: campaign.id,
-        name: campaign.name,
-        countries: campaign.countries as string[],
-        paths: campaign.paths.map((path) => ({
-          id: path.id,
-          landingPageId: path.landingPageId,
-          offerPageId: path.offerPageId,
-        })),
-      },
-    },
-  };
+    };
+  } catch (error) {
+    console.log(error);
+    return { notFound: true };
+  }
 };

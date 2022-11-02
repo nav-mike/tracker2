@@ -8,6 +8,7 @@ import CampaignForm, {
   CampaignType,
   FormInputs,
 } from "../../../components/form/CampaignForm";
+import { findOneCampaign } from "../../../server/campaign/find-one";
 import { ProtectedPage } from "../../../types/auth-required";
 import { trpc } from "../../../utils/trpc";
 import { authOptions } from "../../api/auth/[...nextauth]";
@@ -61,27 +62,25 @@ export const getServerSideProps: GetServerSideProps<
     return { redirect: { destination: "/auth/signin", permanent: false } };
 
   const id = context.params?.id;
-  if (!id) return { notFound: true };
+  try {
+    const campaign = await findOneCampaign(id, session);
 
-  const campaign = await prisma?.campaign.findUnique({
-    where: { id: id },
-    include: { paths: true },
-  });
-  if (!campaign) return { notFound: true };
-  if (campaign.userId !== session.user?.id) return { notFound: true };
-
-  return {
-    props: {
-      campaign: {
-        id: campaign.id,
-        name: campaign.name,
-        countries: campaign.countries as string[],
-        paths: campaign.paths.map((path) => ({
-          id: path.id,
-          landingPageId: path.landingPageId,
-          offerPageId: path.offerPageId,
-        })),
+    return {
+      props: {
+        campaign: {
+          id: campaign.id,
+          name: campaign.name,
+          countries: campaign.countries as string[],
+          paths: campaign.paths.map((path) => ({
+            id: path.id,
+            landingPageId: path.landingPageId,
+            offerPageId: path.offerPageId,
+          })),
+        },
       },
-    },
-  };
+    };
+  } catch (error) {
+    console.log(error);
+    return { notFound: true };
+  }
 };
