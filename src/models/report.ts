@@ -5,12 +5,10 @@ export type Report = {
   clicks: number;
   cost: number;
   revenue: number;
-  profit: number;
-  roi: number;
-  ctr: number;
-  cv: number;
-  cr: number;
-  cpv: number;
-  epv: number;
-  epc: number;
+  profit: number; // revenue - cost
+  roi: number; // profit / cost in %
+  ctr: number; // clicks / visits in %
+  cpv: number; // cost / visits in $
+  epv: number; // revenue / visits in $
+  epc: number; // revenue / clicks in $
 };

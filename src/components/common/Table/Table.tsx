@@ -49,11 +49,6 @@ const Table: FC<ITableProps> = ({
         id: "clicks",
       }),
       columnHelper.accessor("id", {
-        header: "Leads",
-        cell: () => 0,
-        id: "leads",
-      }),
-      columnHelper.accessor("id", {
         header: "Cost",
         cell: () => `$0.00`,
         id: "cost",
