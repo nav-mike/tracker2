@@ -1,5 +1,7 @@
 import { OfferPage } from "@prisma/client";
 import { GetServerSideProps } from "next";
+import { userDevice } from "../../../../../server/traffic/device";
+import { geoIp } from "../../../../../server/traffic/geoip";
 
 const ShowOfferPagePage = () => {
   return <div>Loading...</div>;
@@ -36,6 +38,15 @@ export const getServerSideProps: GetServerSideProps<
 
   if (!campaign) return { notFound: true };
   if (!campaign.paths[0]) return { notFound: true };
+
+  await prisma?.click.create({
+    data: {
+      offerPageId,
+      pathId: campaign.paths[0].id,
+      ...(await geoIp(context)),
+      ...userDevice(context.req.headers["user-agent"] || ""),
+    },
+  });
 
   return {
     redirect: {
