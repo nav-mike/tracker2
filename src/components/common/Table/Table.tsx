@@ -9,10 +9,11 @@ import {
 import { FC, useMemo, useRef, useState } from "react";
 import useMousePosition from "../../../hooks/useMousePosition";
 import { useOutsideClick } from "../../../hooks/useOutsideClick";
+import { Report } from "../../../models/report";
 import Menu from "./Menu";
 
 interface ITableProps {
-  data: LandingPage[];
+  data: Report[];
   onDelete: (id: string) => void;
   type: string;
   showPreview?: boolean;
@@ -24,8 +25,8 @@ const Table: FC<ITableProps> = ({
   onDelete,
   showPreview = true,
 }) => {
-  const columnHelper = useMemo<ColumnHelper<LandingPage>>(
-    () => createColumnHelper<LandingPage>(),
+  const columnHelper = useMemo<ColumnHelper<Report>>(
+    () => createColumnHelper<Report>(),
     []
   );
   const columns = useMemo(
@@ -38,64 +39,54 @@ const Table: FC<ITableProps> = ({
         header: "Name",
         cell: (row) => row.getValue(),
       }),
-      columnHelper.accessor("id", {
+      columnHelper.accessor("visits", {
         header: "Visits",
-        cell: () => 0,
+        cell: (row) => row.getValue(),
         id: "visits",
       }),
-      columnHelper.accessor("id", {
+      columnHelper.accessor("clicks", {
         header: "Clicks",
-        cell: () => 0,
+        cell: (row) => row.getValue(),
         id: "clicks",
       }),
-      columnHelper.accessor("id", {
+      columnHelper.accessor("cost", {
         header: "Cost",
-        cell: () => `$0.00`,
+        cell: (row) => `$${row.getValue().toFixed(2)}`,
         id: "cost",
       }),
-      columnHelper.accessor("id", {
+      columnHelper.accessor("revenue", {
         header: "Revenue",
-        cell: () => `$0.00`,
+        cell: (row) => `$${row.getValue().toFixed(2)}`,
         id: "revenue",
       }),
-      columnHelper.accessor("id", {
+      columnHelper.accessor("profit", {
         header: "Profit",
-        cell: () => `$0.00`,
+        cell: (row) => `$${row.getValue().toFixed(2)}`, // TODO: fix negative
         id: "profit",
       }),
-      columnHelper.accessor("id", {
+      columnHelper.accessor("roi", {
         header: "ROI",
-        cell: () => `0.00%`,
+        cell: (row) => `${row.getValue().toFixed(2)}%`, // TODO: fix percentage
         id: "roi",
       }),
-      columnHelper.accessor("id", {
+      columnHelper.accessor("ctr", {
         header: "CTR",
-        cell: () => `0.00%`,
+        cell: (row) => `${row.getValue().toFixed(2)}%`, // TODO: fix percentage
         id: "ctr",
       }),
-      columnHelper.accessor("id", {
-        header: "CV",
-        cell: () => `0.00%`,
-        id: "cv",
-      }),
-      columnHelper.accessor("id", {
-        header: "CR",
-        cell: () => `0.00%`,
-        id: "cr",
-      }),
-      columnHelper.accessor("id", {
+      columnHelper.accessor("cpv", {
         header: "CPV",
-        cell: () => `$0.00`,
+        cell: (row) => `$${row.getValue().toFixed(2)}`,
         id: "cpv",
       }),
-      columnHelper.accessor("id", {
+      columnHelper.accessor("epv", {
         header: "EPV",
-        cell: () => `$0.00`,
+        cell: (row) => `$${row.getValue().toFixed(2)}`,
         id: "epv",
       }),
-      columnHelper.accessor("id", {
+      columnHelper.accessor("epc", {
         header: "EPC",
-        cell: () => `$0.00`,
+        cell: (row) => `$${row.getValue().toFixed(2)}`,
         id: "epc",
       }),
     ],
@@ -108,15 +99,13 @@ const Table: FC<ITableProps> = ({
   });
   const [showMenu, setShowMenu] = useState(false);
   const menuPosition = useMousePosition();
-  const [selectedLanding, setSelectedLanding] = useState<LandingPage | null>(
-    null
-  );
+  const [selectedLanding, setSelectedLanding] = useState<Report | null>(null);
   const tableRef = useRef<HTMLTableElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   useOutsideClick(tableRef, () => setShowMenu(false), [menuRef]);
 
-  const handleRowClick = (landing: LandingPage) => {
-    setSelectedLanding(landing);
+  const handleRowClick = (row: Report) => {
+    setSelectedLanding(row);
     setShowMenu(true);
   };
 

@@ -6,7 +6,7 @@ import { MousePosition } from "../../../hooks/useMousePosition";
 
 interface IMenuProps {
   id: string;
-  url: string;
+  url?: string;
   hrefPrefix: string;
   position: MousePosition;
   onDelete: (id: string) => void;
