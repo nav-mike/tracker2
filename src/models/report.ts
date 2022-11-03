@@ -1,6 +1,7 @@
 export type Report = {
   id: string;
   name: string;
+  url?: string;
   visits: number;
   clicks: number;
   cost: number;
