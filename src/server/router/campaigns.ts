@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
+import { campaignsReport } from "../report";
 import { createProtectedRouter } from "./context";
 
 const CreateCampaignDTO = z.object({
@@ -46,7 +47,7 @@ export const campaignsRouter = createProtectedRouter()
           userId: ctx.session.user.id,
         },
       });
-      return campaigns;
+      return await campaignsReport(campaigns);
     },
   })
   .mutation("update", {
