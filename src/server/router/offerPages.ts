@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
+import { offerPagesReport } from "../report";
 import { createProtectedRouter } from "./context";
 
 const CreateOfferDTO = z.object({
@@ -30,7 +31,7 @@ export const offerPagesRouter = createProtectedRouter()
           userId: ctx.session.user.id,
         },
       });
-      return offerPages;
+      return offerPagesReport(offerPages);
     },
   })
   .mutation("update", {

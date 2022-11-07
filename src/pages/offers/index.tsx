@@ -1,14 +1,14 @@
-import { LandingPage, OfferPage } from "@prisma/client";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { commonLayout } from "../../components/common/Layout";
 import Table from "../../components/common/Table/Table";
+import { Report } from "../../models/report";
 import { ProtectedPage } from "../../types/auth-required";
 import { trpc } from "../../utils/trpc";
 
 const IndexOfferPage: ProtectedPage = () => {
-  const [data, setData] = useState<OfferPage[]>([]);
+  const [data, setData] = useState<Report[]>([]);
   const offerPages = trpc.useQuery(["offerPages.index"]);
   const deleteOfferPage = trpc.useMutation("offerPages.delete");
 
@@ -40,7 +40,7 @@ const IndexOfferPage: ProtectedPage = () => {
         <div className="flex w-full p-2">
           <Table
             type="offers"
-            data={data as LandingPage[]}
+            data={data}
             onDelete={handleDelete}
             showPreview={false}
           />
