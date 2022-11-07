@@ -40,6 +40,7 @@ export const getServerSideProps: GetServerSideProps<
   await prisma?.visit.create({
     data: {
       landingPageId,
+      offerPageId: campaign.paths[0].offerPageId,
       campaignId: id,
       pathId: campaign.paths[0].id,
       cost: campaign.cost,
