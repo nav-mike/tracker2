@@ -72,6 +72,7 @@ model LandingPage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   visits    Visit[]
+  clicks    Click[]
 }
 
 model OfferPage {
@@ -85,6 +86,7 @@ model OfferPage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   clicks    Click[]
+  visits    Visit[]
 }
 
 model Path {
@@ -121,6 +123,8 @@ model Visit {
   cost          Float       @default(0)
   landingPageId String
   landingPage   LandingPage @relation(fields: [landingPageId], references: [id], onDelete: Cascade)
+  offerPageId   String
+  offerPage     OfferPage   @relation(fields: [offerPageId], references: [id], onDelete: Cascade)
   pathId        String
   path          Path        @relation(fields: [pathId], references: [id], onDelete: Cascade)
   campaignId    String
@@ -133,17 +137,19 @@ model Visit {
 }
 
 model Click {
-  id          String    @id @default(cuid())
-  cost        Float     @default(0)
-  offerPageId String
-  offerPage   OfferPage @relation(fields: [offerPageId], references: [id], onDelete: Cascade)
-  pathId      String
-  path        Path      @relation(fields: [pathId], references: [id], onDelete: Cascade)
-  campaignId  String
-  campaign    Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
-  country     String
-  os          String
-  browser     String
-  device      String
-  createdAt   DateTime  @default(now())
+  id            String      @id @default(cuid())
+  cost          Float       @default(0)
+  landingPageId String
+  landingPage   LandingPage @relation(fields: [landingPageId], references: [id], onDelete: Cascade)
+  offerPageId   String
+  offerPage     OfferPage   @relation(fields: [offerPageId], references: [id], onDelete: Cascade)
+  pathId        String
+  path          Path        @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  campaignId    String
+  campaign      Campaign    @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  country       String
+  os            String
+  browser       String
+  device        String
+  createdAt     DateTime    @default(now())
 }
