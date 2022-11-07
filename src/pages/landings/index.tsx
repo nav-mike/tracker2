@@ -1,14 +1,14 @@
-import { LandingPage } from "@prisma/client";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { commonLayout } from "../../components/common/Layout";
 import Table from "../../components/common/Table/Table";
+import { Report } from "../../models/report";
 import { ProtectedPage } from "../../types/auth-required";
 import { trpc } from "../../utils/trpc";
 
 const IndexLandingPage: ProtectedPage = () => {
-  const [data, setData] = useState<LandingPage[]>([]);
+  const [data, setData] = useState<Report[]>([]);
   const landingPages = trpc.useQuery(["landingPages.index"]);
   const deleteLandingPage = trpc.useMutation("landingPages.delete");
 
