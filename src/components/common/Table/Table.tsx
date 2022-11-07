@@ -14,9 +14,10 @@ import Menu from "./Menu";
 
 interface ITableProps {
   data: Report[];
-  onDelete: (id: string) => void;
+  onDelete?: (id: string) => void;
   type: string;
   showPreview?: boolean;
+  menu?: boolean;
 }
 
 const Table: FC<ITableProps> = ({
@@ -24,6 +25,7 @@ const Table: FC<ITableProps> = ({
   type,
   onDelete,
   showPreview = true,
+  menu = true,
 }) => {
   const columnHelper = useMemo<ColumnHelper<Report>>(
     () => createColumnHelper<Report>(),
@@ -110,7 +112,7 @@ const Table: FC<ITableProps> = ({
   };
 
   const handleDelete = (id: string) => {
-    onDelete(id);
+    if (onDelete) onDelete(id);
     setShowMenu(false);
   };
 
@@ -154,7 +156,7 @@ const Table: FC<ITableProps> = ({
         </tbody>
       </table>
 
-      {showMenu && selectedLanding && (
+      {menu && showMenu && selectedLanding && (
         <Menu
           id={selectedLanding.id}
           url={selectedLanding.url}

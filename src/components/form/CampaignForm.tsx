@@ -82,7 +82,7 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
   const { fields, append, remove } = useFieldArray({ name: "paths", control });
 
   useEffect(() => {
-    if (landingPages.data) setLandingPagesData(landingPages.data);
+    if (landingPages.data) setLandingPagesData(landingPages.data); // TODO: fix type
   }, [landingPages.data]);
 
   useEffect(() => {
