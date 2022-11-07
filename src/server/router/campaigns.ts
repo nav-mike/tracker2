@@ -15,7 +15,7 @@ const CreateCampaignDTO = z.object({
       offerPageId: z.string(),
     })
   ),
-}); // Add default path if user's country is not equal to lander/offer/campaign country
+}); // TODO: Add default path if user's country is not equal to lander/offer/campaign country
 
 export const campaignsRouter = createProtectedRouter()
   .mutation("create", {

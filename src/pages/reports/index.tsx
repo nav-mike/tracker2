@@ -1,9 +1,10 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { commonLayout } from "../../components/common/Layout";
 import Table from "../../components/common/Table/Table";
 import { Report } from "../../models/report";
 import { ProtectedPage } from "../../types/auth-required";
+import { trpc } from "../../utils/trpc";
 
 const grouping = [
   { label: "Landing Page", value: "landingPageId" },
@@ -20,6 +21,11 @@ const grouping = [
 const IndexReportPage: ProtectedPage = () => {
   const [group, setGroup] = useState<string>("landingPageId");
   const [data, setData] = useState<Report[]>([]);
+  const reports = trpc.useQuery(["reports.index", { type: group }]);
+
+  useEffect(() => {
+    if (reports.data) setData(reports.data);
+  }, [reports.data]);
 
   return (
     <>
