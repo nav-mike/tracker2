@@ -3,6 +3,7 @@ import {
   campaignsReport,
   landingPagesReport,
   offerPagesReport,
+  pathsReport,
 } from "../report";
 import { createProtectedRouter } from "./context";
 
@@ -39,6 +40,26 @@ export const reportsRouter = createProtectedRouter().query("index", {
           },
         });
         return campaignsReport(campaigns);
+
+      case "pathId":
+        const campaignIds = (
+          await ctx.prisma.campaign.findMany({
+            where: {
+              userId: ctx.session.user.id,
+            },
+          })
+        ).map((campaign) => campaign.id);
+        const paths = await ctx.prisma.path.findMany({
+          where: {
+            campaignId: {
+              in: campaignIds,
+            },
+          },
+          include: {
+            campaign: true,
+          },
+        });
+        return pathsReport(paths);
 
       default:
         return [];
