@@ -1,4 +1,4 @@
-import { Campaign, LandingPage, OfferPage, Path } from "@prisma/client";
+import { Campaign, LandingPage, OfferPage, Path, Prisma } from "@prisma/client";
 import { getName } from "country-list";
 import { Report } from "../models/report";
 
@@ -196,6 +196,30 @@ export const devicesReport = async (campaignIds: string[]) => {
     return {
       id: visit.device,
       name: visit.device,
+      visits: visit._count?.id || 0,
+      clicks: clicks?._count?.id || 0,
+      cost: visit._sum?.cost || 0,
+      revenue: clicks?._sum?.cost || 0,
+      profit: profit(clicks?._sum?.cost || 0, visit._sum?.cost || 0),
+      roi: roi(clicks?._sum?.cost || 0, visit._sum?.cost || 0),
+      ctr: ctr(clicks?._count?.id || 0, visit._count?.id || 0),
+      cpv: cpv(visit._sum?.cost || 0, visit._count?.id || 0),
+      epv: epv(clicks?._sum?.cost || 0, visit._count?.id || 0),
+      epc: epc(clicks?._sum?.cost || 0, clicks?._count?.id || 0),
+    } as Report;
+  });
+};
+
+export const datesReport = async (campaignIds: string[]) => {
+  const visitsReport = await visitsSliceForDates(campaignIds);
+  const clicksReport = await clicksSliceForDates(campaignIds);
+
+  return visitsReport?.map((visit) => {
+    const clicks = clicksReport?.find((c) => c.date === visit.date);
+
+    return {
+      id: visit.date.toLocaleDateString(),
+      name: visit.date.toLocaleDateString(),
       visits: visit._count?.id || 0,
       clicks: clicks?._count?.id || 0,
       cost: visit._sum?.cost || 0,
@@ -492,4 +516,36 @@ const clicksSliceForDevices = async (campaignIds: string[]) => {
       cost: true,
     },
   });
+};
+
+type DatesReport = {
+  date: Date;
+  _count: {
+    id: number;
+  };
+  _sum: {
+    cost: number;
+  };
+};
+
+const visitsSliceForDates = async (campaignIds: string[]) => {
+  if (!prisma) throw new Error("Prisma is not initialized");
+
+  return await prisma.$queryRaw<DatesReport[]>`
+    SELECT DATE(createdAt) as date, COUNT(id) as _count, SUM(cost) as _sum
+    FROM Visit
+    WHERE campaignId IN (${Prisma.join(campaignIds)})
+    GROUP BY DATE(createdAt)
+  `;
+};
+
+const clicksSliceForDates = async (campaignIds: string[]) => {
+  if (!prisma) throw new Error("Prisma is not initialized");
+
+  return await prisma.$queryRaw<DatesReport[]>`
+    SELECT DATE(createdAt) as date, COUNT(id) as _count, SUM(cost) as _sum
+    FROM Click
+    WHERE campaignId IN (${Prisma.join(campaignIds)})
+    GROUP BY DATE(createdAt)
+  `;
 };
