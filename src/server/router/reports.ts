@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import {
+  browsersReport,
   campaignsReport,
   countriesReport,
   landingPagesReport,
@@ -64,6 +65,11 @@ export const reportsRouter = createProtectedRouter().query("index", {
 
       case "os":
         return osReport(await campaignIds(ctx.session.user.id, ctx.prisma));
+
+      case "browser":
+        return browsersReport(
+          await campaignIds(ctx.session.user.id, ctx.prisma)
+        );
 
       default:
         return [];

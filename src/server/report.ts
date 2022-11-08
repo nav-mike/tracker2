@@ -162,6 +162,30 @@ export const osReport = async (campaignIds: string[]) => {
   });
 };
 
+export const browsersReport = async (campaignIds: string[]) => {
+  const visitsReport = await visitsSliceForBrowsers(campaignIds);
+  const clicksReport = await clicksSliceForBrowsers(campaignIds);
+
+  return visitsReport?.map((visit) => {
+    const clicks = clicksReport?.find((c) => c.browser === visit.browser);
+
+    return {
+      id: visit.browser,
+      name: visit.browser,
+      visits: visit._count?.id || 0,
+      clicks: clicks?._count?.id || 0,
+      cost: visit._sum?.cost || 0,
+      revenue: clicks?._sum?.cost || 0,
+      profit: profit(clicks?._sum?.cost || 0, visit._sum?.cost || 0),
+      roi: roi(clicks?._sum?.cost || 0, visit._sum?.cost || 0),
+      ctr: ctr(clicks?._count?.id || 0, visit._count?.id || 0),
+      cpv: cpv(visit._sum?.cost || 0, visit._count?.id || 0),
+      epv: epv(clicks?._sum?.cost || 0, visit._count?.id || 0),
+      epc: epc(clicks?._sum?.cost || 0, clicks?._count?.id || 0),
+    } as Report;
+  });
+};
+
 const profit = (revenue: number, cost: number) => revenue - cost;
 const roi = (revenue: number, cost: number) =>
   cost !== 0 ? profit(revenue, cost) / cost : 0;
@@ -364,6 +388,40 @@ const visitsSliceForOs = async (campaignIds: string[]) => {
 const clicksSliceForOs = async (campaignIds: string[]) => {
   return await prisma?.click.groupBy({
     by: ["os"],
+    where: {
+      campaignId: {
+        in: campaignIds,
+      },
+    },
+    _count: {
+      id: true,
+    },
+    _sum: {
+      cost: true,
+    },
+  });
+};
+
+const visitsSliceForBrowsers = async (campaignIds: string[]) => {
+  return await prisma?.visit.groupBy({
+    by: ["browser"],
+    where: {
+      campaignId: {
+        in: campaignIds,
+      },
+    },
+    _count: {
+      id: true,
+    },
+    _sum: {
+      cost: true,
+    },
+  });
+};
+
+const clicksSliceForBrowsers = async (campaignIds: string[]) => {
+  return await prisma?.click.groupBy({
+    by: ["browser"],
     where: {
       campaignId: {
         in: campaignIds,
