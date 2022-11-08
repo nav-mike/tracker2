@@ -5,6 +5,7 @@ import {
   countriesReport,
   landingPagesReport,
   offerPagesReport,
+  osReport,
   pathsReport,
 } from "../report";
 import { createProtectedRouter } from "./context";
@@ -60,6 +61,9 @@ export const reportsRouter = createProtectedRouter().query("index", {
         return countriesReport(
           await campaignIds(ctx.session.user.id, ctx.prisma)
         );
+
+      case "os":
+        return osReport(await campaignIds(ctx.session.user.id, ctx.prisma));
 
       default:
         return [];

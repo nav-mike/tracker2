@@ -138,6 +138,30 @@ export const countriesReport = async (campaignIds: string[]) => {
   });
 };
 
+export const osReport = async (campaignIds: string[]) => {
+  const visitsReport = await visitsSliceForOs(campaignIds);
+  const clicksReport = await clicksSliceForOs(campaignIds);
+
+  return visitsReport?.map((visit) => {
+    const clicks = clicksReport?.find((c) => c.os === visit.os);
+
+    return {
+      id: visit.os,
+      name: visit.os,
+      visits: visit._count?.id || 0,
+      clicks: clicks?._count?.id || 0,
+      cost: visit._sum?.cost || 0,
+      revenue: clicks?._sum?.cost || 0,
+      profit: profit(clicks?._sum?.cost || 0, visit._sum?.cost || 0),
+      roi: roi(clicks?._sum?.cost || 0, visit._sum?.cost || 0),
+      ctr: ctr(clicks?._count?.id || 0, visit._count?.id || 0),
+      cpv: cpv(visit._sum?.cost || 0, visit._count?.id || 0),
+      epv: epv(clicks?._sum?.cost || 0, visit._count?.id || 0),
+      epc: epc(clicks?._sum?.cost || 0, clicks?._count?.id || 0),
+    } as Report;
+  });
+};
+
 const profit = (revenue: number, cost: number) => revenue - cost;
 const roi = (revenue: number, cost: number) =>
   cost !== 0 ? profit(revenue, cost) / cost : 0;
@@ -306,6 +330,40 @@ const clicksSliceForCampaigns = async (campaignIds: string[]) => {
 const clicksSliceForCountries = async (campaignIds: string[]) => {
   return await prisma?.click.groupBy({
     by: ["country"],
+    where: {
+      campaignId: {
+        in: campaignIds,
+      },
+    },
+    _count: {
+      id: true,
+    },
+    _sum: {
+      cost: true,
+    },
+  });
+};
+
+const visitsSliceForOs = async (campaignIds: string[]) => {
+  return await prisma?.visit.groupBy({
+    by: ["os"],
+    where: {
+      campaignId: {
+        in: campaignIds,
+      },
+    },
+    _count: {
+      id: true,
+    },
+    _sum: {
+      cost: true,
+    },
+  });
+};
+
+const clicksSliceForOs = async (campaignIds: string[]) => {
+  return await prisma?.click.groupBy({
+    by: ["os"],
     where: {
       campaignId: {
         in: campaignIds,
