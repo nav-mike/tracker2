@@ -186,6 +186,30 @@ export const browsersReport = async (campaignIds: string[]) => {
   });
 };
 
+export const devicesReport = async (campaignIds: string[]) => {
+  const visitsReport = await visitsSliceForDevices(campaignIds);
+  const clicksReport = await clicksSliceForDevices(campaignIds);
+
+  return visitsReport?.map((visit) => {
+    const clicks = clicksReport?.find((c) => c.device === visit.device);
+
+    return {
+      id: visit.device,
+      name: visit.device,
+      visits: visit._count?.id || 0,
+      clicks: clicks?._count?.id || 0,
+      cost: visit._sum?.cost || 0,
+      revenue: clicks?._sum?.cost || 0,
+      profit: profit(clicks?._sum?.cost || 0, visit._sum?.cost || 0),
+      roi: roi(clicks?._sum?.cost || 0, visit._sum?.cost || 0),
+      ctr: ctr(clicks?._count?.id || 0, visit._count?.id || 0),
+      cpv: cpv(visit._sum?.cost || 0, visit._count?.id || 0),
+      epv: epv(clicks?._sum?.cost || 0, visit._count?.id || 0),
+      epc: epc(clicks?._sum?.cost || 0, clicks?._count?.id || 0),
+    } as Report;
+  });
+};
+
 const profit = (revenue: number, cost: number) => revenue - cost;
 const roi = (revenue: number, cost: number) =>
   cost !== 0 ? profit(revenue, cost) / cost : 0;
@@ -422,6 +446,40 @@ const visitsSliceForBrowsers = async (campaignIds: string[]) => {
 const clicksSliceForBrowsers = async (campaignIds: string[]) => {
   return await prisma?.click.groupBy({
     by: ["browser"],
+    where: {
+      campaignId: {
+        in: campaignIds,
+      },
+    },
+    _count: {
+      id: true,
+    },
+    _sum: {
+      cost: true,
+    },
+  });
+};
+
+const visitsSliceForDevices = async (campaignIds: string[]) => {
+  return await prisma?.visit.groupBy({
+    by: ["device"],
+    where: {
+      campaignId: {
+        in: campaignIds,
+      },
+    },
+    _count: {
+      id: true,
+    },
+    _sum: {
+      cost: true,
+    },
+  });
+};
+
+const clicksSliceForDevices = async (campaignIds: string[]) => {
+  return await prisma?.click.groupBy({
+    by: ["device"],
     where: {
       campaignId: {
         in: campaignIds,

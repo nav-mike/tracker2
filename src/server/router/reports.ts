@@ -4,6 +4,7 @@ import {
   browsersReport,
   campaignsReport,
   countriesReport,
+  devicesReport,
   landingPagesReport,
   offerPagesReport,
   osReport,
@@ -68,6 +69,11 @@ export const reportsRouter = createProtectedRouter().query("index", {
 
       case "browser":
         return browsersReport(
+          await campaignIds(ctx.session.user.id, ctx.prisma)
+        );
+
+      case "device":
+        return devicesReport(
           await campaignIds(ctx.session.user.id, ctx.prisma)
         );
 
