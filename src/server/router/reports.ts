@@ -1,6 +1,8 @@
+import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import {
   campaignsReport,
+  countriesReport,
   landingPagesReport,
   offerPagesReport,
   pathsReport,
@@ -42,17 +44,10 @@ export const reportsRouter = createProtectedRouter().query("index", {
         return campaignsReport(campaigns);
 
       case "pathId":
-        const campaignIds = (
-          await ctx.prisma.campaign.findMany({
-            where: {
-              userId: ctx.session.user.id,
-            },
-          })
-        ).map((campaign) => campaign.id);
         const paths = await ctx.prisma.path.findMany({
           where: {
             campaignId: {
-              in: campaignIds,
+              in: await campaignIds(ctx.session.user.id, ctx.prisma),
             },
           },
           include: {
@@ -61,8 +56,22 @@ export const reportsRouter = createProtectedRouter().query("index", {
         });
         return pathsReport(paths);
 
+      case "country":
+        return countriesReport(
+          await campaignIds(ctx.session.user.id, ctx.prisma)
+        );
+
       default:
         return [];
     }
   },
 });
+
+const campaignIds = async (userId: string, prisma: PrismaClient) =>
+  (
+    await prisma.campaign.findMany({
+      where: {
+        userId: userId,
+      },
+    })
+  ).map((campaign) => campaign.id);

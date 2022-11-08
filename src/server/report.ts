@@ -1,4 +1,5 @@
 import { Campaign, LandingPage, OfferPage, Path } from "@prisma/client";
+import { getName } from "country-list";
 import { Report } from "../models/report";
 
 export const campaignsReport = async (campaigns: Campaign[]) => {
@@ -108,6 +109,30 @@ export const pathsReport = async (
       ctr: ctr(clicks?._count?.id || 0, visits?._count?.id || 0),
       cpv: cpv(visits?._sum?.cost || 0, visits?._count?.id || 0),
       epv: epv(clicks?._sum?.cost || 0, visits?._count?.id || 0),
+      epc: epc(clicks?._sum?.cost || 0, clicks?._count?.id || 0),
+    } as Report;
+  });
+};
+
+export const countriesReport = async (campaignIds: string[]) => {
+  const visitsReport = await visitsSliceForCountry(campaignIds);
+  const clicksReport = await clicksSliceForCountries(campaignIds);
+
+  return visitsReport?.map((visit) => {
+    const clicks = clicksReport?.find((c) => c.country === visit.country);
+
+    return {
+      id: visit.country,
+      name: getName(visit.country),
+      visits: visit._count?.id || 0,
+      clicks: clicks?._count?.id || 0,
+      cost: visit._sum?.cost || 0,
+      revenue: clicks?._sum?.cost || 0,
+      profit: profit(clicks?._sum?.cost || 0, visit._sum?.cost || 0),
+      roi: roi(clicks?._sum?.cost || 0, visit._sum?.cost || 0),
+      ctr: ctr(clicks?._count?.id || 0, visit._count?.id || 0),
+      cpv: cpv(visit._sum?.cost || 0, visit._count?.id || 0),
+      epv: epv(clicks?._sum?.cost || 0, visit._count?.id || 0),
       epc: epc(clicks?._sum?.cost || 0, clicks?._count?.id || 0),
     } as Report;
   });
@@ -244,9 +269,43 @@ const visitsSliceForCampaigns = async (campaignIds: string[]) => {
   });
 };
 
+const visitsSliceForCountry = async (campaignIds: string[]) => {
+  return await prisma?.visit.groupBy({
+    by: ["country"],
+    where: {
+      campaignId: {
+        in: campaignIds,
+      },
+    },
+    _count: {
+      id: true,
+    },
+    _sum: {
+      cost: true,
+    },
+  });
+};
+
 const clicksSliceForCampaigns = async (campaignIds: string[]) => {
   return await prisma?.click.groupBy({
     by: ["campaignId"],
+    where: {
+      campaignId: {
+        in: campaignIds,
+      },
+    },
+    _count: {
+      id: true,
+    },
+    _sum: {
+      cost: true,
+    },
+  });
+};
+
+const clicksSliceForCountries = async (campaignIds: string[]) => {
+  return await prisma?.click.groupBy({
+    by: ["country"],
     where: {
       campaignId: {
         in: campaignIds,
