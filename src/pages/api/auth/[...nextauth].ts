@@ -14,6 +14,7 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
+        session.user.subscribed = user.activeSubscription as boolean;
       }
       return session;
     },
