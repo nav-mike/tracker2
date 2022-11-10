@@ -27,7 +27,7 @@ model Account {
   scope                    String?
   id_token                 String? @db.Text
   session_state            String?
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade) // TODO: dashboard
 
   @@unique([provider, providerAccountId])
 }
@@ -41,16 +41,19 @@ model Session {
 }
 
 model User {
-  id            String        @id @default(cuid())
-  name          String?
-  email         String?       @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  landingPages  LandingPage[]
-  offerPages    OfferPage[]
-  campaigns     Campaign[]
+  id                 String        @id @default(cuid())
+  name               String?
+  email              String?       @unique
+  emailVerified      DateTime?
+  image              String?
+  accounts           Account[]
+  sessions           Session[]
+  landingPages       LandingPage[]
+  offerPages         OfferPage[]
+  campaigns          Campaign[]
+  customerId         String?
+  subscriptionId     String?
+  activeSubscription Boolean?      @default(false)
 }
 
 model VerificationToken {

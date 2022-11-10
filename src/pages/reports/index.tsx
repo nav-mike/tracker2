@@ -18,6 +18,9 @@ const grouping = [
   { label: "Date", value: "createdAt" },
 ];
 
+// TODO: filters, pagination, sorting, multiple grouping
+// TODO: hide id column
+
 const IndexReportPage: ProtectedPage = () => {
   const [group, setGroup] = useState<string>("landingPageId");
   const [data, setData] = useState<Report[]>([]);
