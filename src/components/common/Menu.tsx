@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { BiTable } from "react-icons/bi";
 import { BsCardChecklist } from "react-icons/bs";
 import { BsTag } from "react-icons/bs";

@@ -20,6 +20,7 @@ const grouping = [
 
 // TODO: filters, pagination, sorting, multiple grouping
 // TODO: hide id column
+// TODO: check access
 
 const IndexReportPage: ProtectedPage = () => {
   const [group, setGroup] = useState<string>("landingPageId");
