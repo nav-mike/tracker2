@@ -41,19 +41,20 @@ model Session {
 }
 
 model User {
-  id                 String        @id @default(cuid())
-  name               String?
-  email              String?       @unique
-  emailVerified      DateTime?
-  image              String?
-  accounts           Account[]
-  sessions           Session[]
-  landingPages       LandingPage[]
-  offerPages         OfferPage[]
-  campaigns          Campaign[]
-  customerId         String?
-  subscriptionId     String?
-  activeSubscription Boolean?      @default(false)
+  id                   String        @id @default(cuid())
+  name                 String?
+  email                String?       @unique
+  emailVerified        DateTime?
+  image                String?
+  accounts             Account[]
+  sessions             Session[]
+  landingPages         LandingPage[]
+  offerPages           OfferPage[]
+  campaigns            Campaign[]
+  customerId           String?
+  subscriptionId       String?
+  subscriptionInterval String?       @default("month")
+  activeSubscription   Boolean?      @default(false)
 }
 
 model VerificationToken {
