@@ -8,6 +8,7 @@ import Stripe from "stripe";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "../../../server/db/client";
 import { env } from "../../../env/server.mjs";
+import { stripeClient } from "../../../server/billing/stripe";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
@@ -22,12 +23,6 @@ export const authOptions: NextAuthOptions = {
   },
   events: {
     createUser: async (message) => {
-      if (!process.env.STRIPE_SECRET_KEY) return;
-
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-        apiVersion: "2022-08-01",
-      });
-
       const params: Stripe.CustomerCreateParams = {
         email: message.user.email ?? undefined,
         name: message.user.name ?? undefined,
@@ -35,7 +30,7 @@ export const authOptions: NextAuthOptions = {
           userId: message.user.id,
         },
       };
-      const customer = await stripe.customers.create(params);
+      const customer = await stripeClient.customers.create(params);
 
       await prisma.user.update({
         where: {
