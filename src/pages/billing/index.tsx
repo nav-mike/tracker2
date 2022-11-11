@@ -1,10 +1,12 @@
 import { User } from "@prisma/client";
+import { loadStripe } from "@stripe/stripe-js";
 import { unstable_getServerSession } from "next-auth";
 import Head from "next/head";
 import { GetServerSideProps } from "next/types";
 import { commonLayout } from "../../components/common/Layout";
 import { stripeClient } from "../../server/billing/stripe";
 import { ProtectedPage } from "../../types/auth-required";
+import { trpc } from "../../utils/trpc";
 import { authOptions } from "../api/auth/[...nextauth]";
 
 type StripePlan = {
@@ -17,6 +19,21 @@ const IndexBillingPage: ProtectedPage<{ user: User; plans?: StripePlan[] }> = ({
   user,
   plans,
 }) => {
+  const subscribe = trpc.useMutation("billing.subscribeToPlan");
+
+  const handleSubscribe = async (planId: string) => {
+    if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) return;
+
+    const session = await subscribe.mutateAsync({ planId });
+    const stripe = await loadStripe(
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+    );
+
+    if (!session || !stripe) return;
+
+    await stripe?.redirectToCheckout({ sessionId: session.id });
+  };
+
   return (
     <>
       <Head>
@@ -41,7 +58,12 @@ const IndexBillingPage: ProtectedPage<{ user: User; plans?: StripePlan[] }> = ({
                   {(!user.activeSubscription ||
                     (user.activeSubscription &&
                       user.subscriptionInterval === plan.interval)) && (
-                    <button className="button button-success">Subscribe</button>
+                    <button
+                      className="button button-success"
+                      onClick={() => handleSubscribe(plan.id)}
+                    >
+                      Subscribe
+                    </button>
                   )}
                   {user.activeSubscription &&
                     user.subscriptionInterval === plan.interval && (
