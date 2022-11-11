@@ -57,7 +57,7 @@ const IndexBillingPage: ProtectedPage<{ user: User; plans?: StripePlan[] }> = ({
                   </h3>
                   {(!user.activeSubscription ||
                     (user.activeSubscription &&
-                      user.subscriptionInterval === plan.interval)) && (
+                      user.subscriptionInterval !== plan.interval)) && (
                     <button
                       className="button button-success"
                       onClick={() => handleSubscribe(plan.id)}
