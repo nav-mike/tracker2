@@ -2,6 +2,7 @@ import NextAuth, { type NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import GitHubProvider from "next-auth/providers/github";
 import Auth0Provider from "next-auth/providers/auth0";
+import Stripe from "stripe";
 
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -17,6 +18,33 @@ export const authOptions: NextAuthOptions = {
         session.user.subscribed = user.activeSubscription as boolean;
       }
       return session;
+    },
+  },
+  events: {
+    createUser: async (message) => {
+      if (!process.env.STRIPE_SECRET_KEY) return;
+
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+        apiVersion: "2022-08-01",
+      });
+
+      const params: Stripe.CustomerCreateParams = {
+        email: message.user.email ?? undefined,
+        name: message.user.name ?? undefined,
+        metadata: {
+          userId: message.user.id,
+        },
+      };
+      const customer = await stripe.customers.create(params);
+
+      await prisma.user.update({
+        where: {
+          id: message.user.id,
+        },
+        data: {
+          customerId: customer.id,
+        },
+      });
     },
   },
   // Configure one or more authentication providers
