@@ -10,7 +10,6 @@ import { useSession } from "next-auth/react";
 const Menu: FC<{ isShow: boolean }> = ({ isShow }) => {
   const { data: session, status } = useSession();
 
-  // TODO: fix types
   return (
     <div className="flex flex-col gap-4 p-4 min-h-screen bg-slate-500 text-white">
       <Link href="/">
