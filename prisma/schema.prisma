@@ -51,8 +51,8 @@ model User {
   landingPages         LandingPage[]
   offerPages           OfferPage[]
   campaigns            Campaign[]
-  customerId           String?
-  subscriptionId       String?
+  customerId           String?       @unique
+  subscriptionId       String?       @unique
   subscriptionInterval String?       @default("month")
   activeSubscription   Boolean?      @default(false)
 }
