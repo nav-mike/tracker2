@@ -28,9 +28,9 @@ const UserNav: FC<{ username: string }> = ({ username }) => {
       </button>
       {showMenu && (
         <div className="absolute right-4 flex flex-col bg-gray-100 top-12 rounded-b-md p-2">
-          <Link href="/profile">
+          <Link href="/billing">
             <a className="user-menu-item">
-              <AiOutlineUser /> Profile
+              <AiOutlineUser /> Billing
             </a>
           </Link>
           <button className="user-menu-item" onClick={logoutHandler}>
