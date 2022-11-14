@@ -1,3 +1,5 @@
+import { GetServerSideProps } from "next";
+import { unstable_getServerSession } from "next-auth";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { commonLayout } from "../../components/common/Layout";
@@ -5,6 +7,7 @@ import Table from "../../components/common/Table/Table";
 import { Report } from "../../models/report";
 import { ProtectedPage } from "../../types/auth-required";
 import { trpc } from "../../utils/trpc";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 const grouping = [
   { label: "Landing Page", value: "landingPageId" },
@@ -20,7 +23,6 @@ const grouping = [
 
 // TODO: filters, pagination, sorting, multiple grouping
 // TODO: hide id column
-// TODO: check access
 
 const IndexReportPage: ProtectedPage = () => {
   const [group, setGroup] = useState<string>("landingPageId");
@@ -70,3 +72,21 @@ const IndexReportPage: ProtectedPage = () => {
 IndexReportPage.getLayout = commonLayout;
 
 export default IndexReportPage;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+
+  if (!session)
+    return { redirect: { destination: "/auth/signin", permanent: false } };
+
+  if (!session.user?.subscribed)
+    return { redirect: { destination: "/", permanent: false } };
+
+  return {
+    props: {},
+  };
+};
