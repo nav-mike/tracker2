@@ -1,4 +1,3 @@
-import { LandingPage } from "@prisma/client";
 import {
   ColumnHelper,
   createColumnHelper,
@@ -19,7 +18,8 @@ interface ITableProps {
   showPreview?: boolean;
   menu?: boolean;
 }
-
+// TODO: sorting
+// TODO: show no data when no data
 const Table: FC<ITableProps> = ({
   data,
   type,
@@ -33,10 +33,6 @@ const Table: FC<ITableProps> = ({
   );
   const columns = useMemo(
     () => [
-      columnHelper.accessor("id", {
-        header: "ID",
-        cell: (row) => row.getValue(),
-      }),
       columnHelper.accessor("name", {
         header: "Name",
         cell: (row) => row.getValue(),
