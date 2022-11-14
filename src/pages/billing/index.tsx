@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import { loadStripe } from "@stripe/stripe-js";
 import { unstable_getServerSession } from "next-auth";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
 import { commonLayout } from "../../components/common/Layout";
 import { stripeClient } from "../../server/billing/stripe";
@@ -20,18 +21,24 @@ const IndexBillingPage: ProtectedPage<{ user: User; plans?: StripePlan[] }> = ({
   plans,
 }) => {
   const subscribe = trpc.useMutation("billing.subscribeToPlan");
+  const router = useRouter();
 
   const handleSubscribe = async (planId: string) => {
     if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) return;
 
     const session = await subscribe.mutateAsync({ planId });
-    const stripe = await loadStripe(
-      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-    );
 
-    if (!session || !stripe) return;
+    if (session?.type === "checkout_session") {
+      const stripe = await loadStripe(
+        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+      );
 
-    await stripe?.redirectToCheckout({ sessionId: session.id });
+      if (!session || !stripe) return;
+
+      await stripe?.redirectToCheckout({ sessionId: session.id });
+    } else {
+      router.push("/billing/payment/success");
+    }
   };
 
   return (
