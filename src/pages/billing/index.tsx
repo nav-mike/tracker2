@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import { loadStripe } from "@stripe/stripe-js";
 import { unstable_getServerSession } from "next-auth";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
 import { commonLayout } from "../../components/common/Layout";
@@ -106,6 +107,20 @@ const IndexBillingPage: ProtectedPage<{ user: User; plans?: StripePlan[] }> = ({
           Stripe
         </a>{" "}
         is used to process payments.
+      </p>
+
+      <p className="m-4 p-4 border-2 border-red-500 rounded-md">
+        This is an educational project. Please do not use your real credit card.
+        For testing purposes, you can use the stripe{" "}
+        <Link
+          href="https://stripe.com/docs/testing#testing-interactively"
+          target="_blank"
+        >
+          <a target="_blank" className="underline">
+            test cards
+          </a>
+        </Link>
+        .
       </p>
     </>
   );
