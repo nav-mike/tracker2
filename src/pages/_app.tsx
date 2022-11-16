@@ -14,19 +14,20 @@ import { AuthRequired } from "../types/auth-required";
 import Auth from "../components/auth/Auth";
 import { Session } from "next-auth";
 
+// TODO: clone things
+
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
   P,
   IP
 > & {
-  getLayout?: (page: ReactElement) => ReactElement<any, any> | null;
+  getLayout?: (page: ReactElement) => ReactElement | null;
 };
 
 type AppPropsWithLayout = AppProps<{ session: Session }> & {
   Component: NextPageWithLayout & AuthRequired;
 };
 
-// TODO: Add a type for the session
-const MyApp: AppType<any> = ({
+const MyApp: AppType<{ session: Session }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }: AppPropsWithLayout) => {
@@ -53,7 +54,7 @@ const getBaseUrl = () => {
 };
 
 export default withTRPC<AppRouter>({
-  config({ ctx }) {
+  config() {
     /**
      * If you want to use SSR, you need to use the server's full URL
      * @link https://trpc.io/docs/ssr
