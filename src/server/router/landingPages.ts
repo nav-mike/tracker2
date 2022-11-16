@@ -34,6 +34,18 @@ export const landingPagesRouter = createProtectedRouter()
       return landingPagesReport(landingPages);
     },
   })
+  .query("select-data", {
+    resolve: async ({ ctx }) => {
+      if (!ctx.session.user) return [];
+
+      const landingPages = await ctx.prisma.landingPage.findMany({
+        where: {
+          userId: ctx.session.user.id,
+        },
+      });
+      return landingPages;
+    },
+  })
   .mutation("update", {
     input: z.object({
       id: z.string(),

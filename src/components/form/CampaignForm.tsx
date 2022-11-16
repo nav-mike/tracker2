@@ -54,10 +54,12 @@ interface ICampaignFormProps {
   onSubmit: SubmitHandler<FormInputs>;
 }
 
+// TODO: add blank page route when filter for traffic is not accepted
+
 const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
   const [landingPagesData, setLandingPagesData] = useState<LandingPage[]>([]);
   const [offerPagesData, setOfferPagesData] = useState<OfferPage[]>([]);
-  const landingPages = trpc.useQuery(["landingPages.index"]);
+  const landingPages = trpc.useQuery(["landingPages.select-data"]);
   const offerPages = trpc.useQuery(["offerPages.index"]);
   const { countriesOptions, findCountry } = useCountries();
   const {
@@ -82,11 +84,11 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
   const { fields, append, remove } = useFieldArray({ name: "paths", control });
 
   useEffect(() => {
-    if (landingPages.data) setLandingPagesData(landingPages.data); // TODO: fix type
+    if (landingPages.data) setLandingPagesData(landingPages.data);
   }, [landingPages.data]);
 
   useEffect(() => {
-    if (offerPages.data) setOfferPagesData(offerPages.data);
+    if (offerPages.data) setOfferPagesData(offerPages.data); // TODO: fix type
   }, [offerPages.data]);
 
   const handleAddPath = () => {
