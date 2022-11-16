@@ -19,7 +19,6 @@ interface ITableProps {
   menu?: boolean;
 }
 // TODO: sorting
-// TODO: show no data when no data
 const Table: FC<ITableProps> = ({
   data,
   type,
@@ -135,21 +134,24 @@ const Table: FC<ITableProps> = ({
           ))}
         </thead>
 
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr
-              key={row.id}
-              className="hover:bg-slate-100 cursor-pointer"
-              onClick={() => handleRowClick(row.original)}
-            >
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="p-2 text-center text-gray-500">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
+        {table.getRowModel().rows.length > 0 && (
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr
+                key={row.id}
+                className="hover:bg-slate-100 cursor-pointer"
+                onClick={() => handleRowClick(row.original)}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="p-2 text-center text-gray-500">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        )}
+        {table.getRowModel().rows.length <= 0 && "No data"}
       </table>
 
       {menu && showMenu && selectedLanding && (
