@@ -60,7 +60,7 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
   const [landingPagesData, setLandingPagesData] = useState<LandingPage[]>([]);
   const [offerPagesData, setOfferPagesData] = useState<OfferPage[]>([]);
   const landingPages = trpc.useQuery(["landingPages.select-data"]);
-  const offerPages = trpc.useQuery(["offerPages.index"]);
+  const offerPages = trpc.useQuery(["offerPages.select-data"]);
   const { countriesOptions, findCountry } = useCountries();
   const {
     control,

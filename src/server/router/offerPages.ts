@@ -34,6 +34,18 @@ export const offerPagesRouter = createProtectedRouter()
       return offerPagesReport(offerPages);
     },
   })
+  .query("select-data", {
+    resolve: async ({ ctx }) => {
+      if (!ctx.session.user) return [];
+
+      const offerPages = await ctx.prisma.offerPage.findMany({
+        where: {
+          userId: ctx.session.user.id,
+        },
+      });
+      return offerPages;
+    },
+  })
   .mutation("update", {
     input: z.object({
       id: z.string(),
