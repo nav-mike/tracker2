@@ -3,7 +3,7 @@ import { useMemo } from "react";
 
 export const useCountries = () => {
   const countries = useMemo(() => getCodeList(), []);
-  const allObject = { value: "all", label: "All Countries [ALL]" };
+  const allObject = { value: "ALL", label: "All Countries [ALL]" };
 
   return {
     countries,
@@ -15,7 +15,7 @@ export const useCountries = () => {
       allObject,
     ],
     findCountry: (code: string) => {
-      if (code === "all") return allObject;
+      if (code.toUpperCase() === "ALL") return allObject;
 
       return {
         value: code,

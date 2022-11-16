@@ -17,9 +17,14 @@ const EditOfferPage: ProtectedPage<{ offer: OfferPageType }> = ({ offer }) => {
   const router = useRouter();
 
   const handleSubmit: SubmitHandler<FormInputs> = (data) => {
+    let countries = data.countries?.map((country) =>
+      country.value.toUpperCase()
+    );
+    if (countries?.length === 0) countries = undefined;
+
     const offerPage = {
       ...data,
-      countries: data.countries?.map((country) => country.value.toUpperCase()),
+      countries,
     };
     updateOfferPage
       .mutateAsync({ id: offer.id, offer: offerPage })

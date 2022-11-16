@@ -19,13 +19,19 @@ const EditLandingPage: ProtectedPage<{ landing: LandingPageType }> = ({
   const router = useRouter();
 
   const handleSubmit: SubmitHandler<FormInputs> = (data) => {
+    let countries = data.countries?.map((country) =>
+      country.value.toUpperCase()
+    );
+    if (countries?.length === 0) countries = undefined;
+
     const landingPage = {
       ...data,
-      countries: data.countries?.map((country) => country.value.toUpperCase()),
+      countries,
     };
+    console.log(landingPage);
     updateLandingPage
       .mutateAsync({ id: landing.id, landing: landingPage })
-      .then(() => router.push("/landing"))
+      .then(() => router.push("/landings"))
       .catch((err) => console.log(err));
   };
 

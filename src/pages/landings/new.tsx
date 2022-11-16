@@ -21,6 +21,7 @@ const NewLandingPage: ProtectedPage = () => {
       ...data,
       countries: data.countries?.map((country) => country.value.toUpperCase()),
     };
+    console.log(landingPage);
     createLandingPage
       .mutateAsync(landingPage)
       .then(() => router.push("/landings"))

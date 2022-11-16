@@ -13,6 +13,8 @@ export const landingPagesRouter = createProtectedRouter()
   .mutation("create", {
     input: CreateLandingDTO,
     resolve: async ({ ctx, input }) => {
+      console.log(input);
+
       const landing = await ctx.prisma.landingPage.create({
         data: {
           ...input,
@@ -53,6 +55,8 @@ export const landingPagesRouter = createProtectedRouter()
     }),
     resolve: async ({ ctx, input }) => {
       if (!ctx.session.user.id) return null;
+
+      console.log(input);
 
       if (!isLandingPresented(input.id, ctx.session.user.id, ctx.prisma))
         return null;
