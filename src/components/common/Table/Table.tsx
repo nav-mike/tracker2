@@ -161,7 +161,18 @@ const Table: FC<ITableProps> = ({
             ))}
           </tbody>
         )}
-        {table.getRowModel().rows.length <= 0 && "No data"}
+        {table.getRowModel().rows.length <= 0 && (
+          <tbody>
+            <tr>
+              <td
+                colSpan={columns.length}
+                className="p-2 text-center text-gray-500"
+              >
+                No data found
+              </td>
+            </tr>
+          </tbody>
+        )}
       </table>
 
       {menu && showMenu && selectedLanding && (
