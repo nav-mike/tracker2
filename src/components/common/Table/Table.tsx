@@ -11,6 +11,16 @@ import { useOutsideClick } from "../../../hooks/useOutsideClick";
 import { Report } from "../../../models/report";
 import Menu from "./Menu";
 
+const moneyRender = (value: number) => {
+  if (value > 0) {
+    return <span style={{ color: "green" }}>${value.toFixed(2)}</span>;
+  } else if (value < 0) {
+    return <span style={{ color: "red" }}>-${Math.abs(value).toFixed(2)}</span>;
+  } else {
+    return `$${value.toFixed(2)}`;
+  }
+};
+
 interface ITableProps {
   data: Report[];
   onDelete?: (id: string) => void;
@@ -48,42 +58,42 @@ const Table: FC<ITableProps> = ({
       }),
       columnHelper.accessor("cost", {
         header: "Cost",
-        cell: (row) => `$${row.getValue().toFixed(2)}`,
+        cell: (row) => moneyRender(row.getValue()),
         id: "cost",
       }),
       columnHelper.accessor("revenue", {
         header: "Revenue",
-        cell: (row) => `$${row.getValue().toFixed(2)}`,
+        cell: (row) => moneyRender(row.getValue()),
         id: "revenue",
       }),
       columnHelper.accessor("profit", {
         header: "Profit",
-        cell: (row) => `$${row.getValue().toFixed(2)}`, // TODO: fix negative
+        cell: (row) => moneyRender(row.getValue()),
         id: "profit",
       }),
       columnHelper.accessor("roi", {
         header: "ROI",
-        cell: (row) => `${row.getValue().toFixed(2)}%`, // TODO: fix percentage
+        cell: (row) => moneyRender(row.getValue()),
         id: "roi",
       }),
       columnHelper.accessor("ctr", {
         header: "CTR",
-        cell: (row) => `${row.getValue().toFixed(2)}%`, // TODO: fix percentage
+        cell: (row) => moneyRender(row.getValue()),
         id: "ctr",
       }),
       columnHelper.accessor("cpv", {
         header: "CPV",
-        cell: (row) => `$${row.getValue().toFixed(2)}`,
+        cell: (row) => moneyRender(row.getValue()),
         id: "cpv",
       }),
       columnHelper.accessor("epv", {
         header: "EPV",
-        cell: (row) => `$${row.getValue().toFixed(2)}`,
+        cell: (row) => moneyRender(row.getValue()),
         id: "epv",
       }),
       columnHelper.accessor("epc", {
         header: "EPC",
-        cell: (row) => `$${row.getValue().toFixed(2)}`,
+        cell: (row) => moneyRender(row.getValue()),
         id: "epc",
       }),
     ],
