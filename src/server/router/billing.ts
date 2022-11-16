@@ -6,9 +6,8 @@ const SubscribeToPlanDTO = z.object({
   planId: z.string(),
 });
 
-export const billingRouter = createProtectedRouter().mutation(
-  "subscribeToPlan",
-  {
+export const billingRouter = createProtectedRouter()
+  .mutation("subscribeToPlan", {
     input: SubscribeToPlanDTO,
     resolve: async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUnique({
@@ -26,8 +25,28 @@ export const billingRouter = createProtectedRouter().mutation(
         return createSubscription(user.customerId, input.planId);
       }
     },
-  }
-);
+  })
+  .query("portal", {
+    resolve: async ({ ctx }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          id: ctx.session.user.id,
+        },
+      });
+
+      if (!user) return null;
+      if (!user.customerId) return null;
+
+      const session = await stripeClient.billingPortal.sessions.create({
+        customer: user.customerId,
+        return_url: `${process.env.NEXT_PUBLIC_TRACKING_BASE_URL}/billing`,
+      });
+
+      return {
+        url: session.url,
+      };
+    },
+  });
 
 const createSubscription = async (customerId: string, planId: string) => {
   const lineItems = [

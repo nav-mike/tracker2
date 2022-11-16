@@ -5,6 +5,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
+import { useEffect, useState } from "react";
 import { commonLayout } from "../../components/common/Layout";
 import { stripeClient } from "../../server/billing/stripe";
 import { ProtectedPage } from "../../types/auth-required";
@@ -22,7 +23,13 @@ const IndexBillingPage: ProtectedPage<{ user: User; plans?: StripePlan[] }> = ({
   plans,
 }) => {
   const subscribe = trpc.useMutation("billing.subscribeToPlan");
+  const portal = trpc.useQuery(["billing.portal"]);
+  const [portalUrl, setPortalUrl] = useState<string | undefined>();
   const router = useRouter();
+
+  useEffect(() => {
+    if (portal.data) setPortalUrl(portal.data.url);
+  }, [portal.data]);
 
   const handleSubscribe = async (planId: string) => {
     if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) return;
@@ -40,6 +47,12 @@ const IndexBillingPage: ProtectedPage<{ user: User; plans?: StripePlan[] }> = ({
     } else {
       router.push("/billing/payment/success");
     }
+  };
+
+  const handleOpenPortal = () => {
+    if (!portalUrl) return;
+
+    router.push(portalUrl);
   };
 
   return (
@@ -75,7 +88,10 @@ const IndexBillingPage: ProtectedPage<{ user: User; plans?: StripePlan[] }> = ({
                   )}
                   {user.activeSubscription &&
                     user.subscriptionInterval === plan.interval && (
-                      <button className="button button-primary">
+                      <button
+                        className="button button-primary"
+                        onClick={handleOpenPortal}
+                      >
                         Manage subscription
                       </button>
                     )}
