@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { forwardRef } from "react";
 import { FiExternalLink, FiEdit, FiArchive } from "react-icons/fi";
-import { FaRegClone } from "react-icons/fa";
 import { MousePosition } from "../../../hooks/useMousePosition";
 
 interface IMenuProps {
