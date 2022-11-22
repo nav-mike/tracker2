@@ -14,7 +14,7 @@ export type FormInputs = {
 export type LandingPageType = {
   id: string;
   name: string;
-  countries: string[]; // TODO: fix ALL value
+  countries: string[];
   url: string;
 };
 

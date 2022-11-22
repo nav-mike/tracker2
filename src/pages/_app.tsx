@@ -14,8 +14,6 @@ import { AuthRequired } from "../types/auth-required";
 import Auth from "../components/auth/Auth";
 import { Session } from "next-auth";
 
-// TODO: clone things
-
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
   P,
   IP

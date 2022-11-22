@@ -28,7 +28,7 @@ interface ITableProps {
   showPreview?: boolean;
   menu?: boolean;
 }
-// TODO: sorting
+
 const Table: FC<ITableProps> = ({
   data,
   type,

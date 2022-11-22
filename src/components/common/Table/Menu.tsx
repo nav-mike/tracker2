@@ -45,13 +45,6 @@ const Menu = forwardRef<Ref, IMenuProps>(
         </a>
       </Link>
       <button
-        className="button button-success button-icon"
-        onClick={() => console.log("clone")}
-        data-type="menu-button"
-      >
-        <FaRegClone /> Clone
-      </button>
-      <button
         className="button-icon button button-danger"
         onClick={() => onDelete(id)}
         data-type="menu-button"

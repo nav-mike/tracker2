@@ -54,8 +54,6 @@ interface ICampaignFormProps {
   onSubmit: SubmitHandler<FormInputs>;
 }
 
-// TODO: add blank page route when filter for traffic is not accepted
-
 const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
   const [landingPagesData, setLandingPagesData] = useState<LandingPage[]>([]);
   const [offerPagesData, setOfferPagesData] = useState<OfferPage[]>([]);
@@ -88,7 +86,7 @@ const CampaignForm: FC<ICampaignFormProps> = ({ campaign, onSubmit }) => {
   }, [landingPages.data]);
 
   useEffect(() => {
-    if (offerPages.data) setOfferPagesData(offerPages.data); // TODO: fix type
+    if (offerPages.data) setOfferPagesData(offerPages.data);
   }, [offerPages.data]);
 
   const handleAddPath = () => {
