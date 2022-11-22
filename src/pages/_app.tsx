@@ -30,16 +30,15 @@ const MyApp: AppType<{ session: Session }> = ({
   pageProps: { session, ...pageProps },
 }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout || ((page) => page);
+  console.log(Component.auth);
   const component = getLayout(
-    <>
-      {Component.auth ? (
-        <Auth>
-          <Component {...pageProps} />
-        </Auth>
-      ) : (
+    Component.auth ? (
+      <Auth>
         <Component {...pageProps} />
-      )}
-    </>
+      </Auth>
+    ) : (
+      <Component {...pageProps} />
+    )
   );
 
   return <SessionProvider session={session}>{component}</SessionProvider>;

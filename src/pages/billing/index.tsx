@@ -143,6 +143,7 @@ const IndexBillingPage: ProtectedPage<{ user: User; plans?: StripePlan[] }> = ({
 };
 
 IndexBillingPage.getLayout = commonLayout;
+IndexBillingPage.auth = true;
 
 export default IndexBillingPage;
 

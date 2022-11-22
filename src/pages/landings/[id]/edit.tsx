@@ -50,6 +50,7 @@ const EditLandingPage: ProtectedPage<{ landing: LandingPageType }> = ({
 };
 
 EditLandingPage.getLayout = commonLayout;
+EditLandingPage.auth = true;
 
 export default EditLandingPage;
 

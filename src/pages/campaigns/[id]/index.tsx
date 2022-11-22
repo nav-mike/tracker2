@@ -70,6 +70,7 @@ const ShowCampaignPage: ProtectedPage<{ campaign: CampaignType }> = ({
 };
 
 ShowCampaignPage.getLayout = commonLayout;
+ShowCampaignPage.auth = true;
 
 export default ShowCampaignPage;
 

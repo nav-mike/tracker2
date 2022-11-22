@@ -43,5 +43,6 @@ const NewLandingPage: ProtectedPage = () => {
 };
 
 NewLandingPage.getLayout = commonLayout;
+NewLandingPage.auth = true;
 
 export default NewLandingPage;

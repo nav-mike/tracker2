@@ -51,5 +51,6 @@ const IndexOfferPage: ProtectedPage = () => {
 };
 
 IndexOfferPage.getLayout = commonLayout;
+IndexOfferPage.auth = true;
 
 export default IndexOfferPage;

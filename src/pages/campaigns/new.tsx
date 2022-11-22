@@ -37,5 +37,6 @@ const NewCampaignPage: ProtectedPage = () => {
 };
 
 NewCampaignPage.getLayout = commonLayout;
+NewCampaignPage.auth = true;
 
 export default NewCampaignPage;

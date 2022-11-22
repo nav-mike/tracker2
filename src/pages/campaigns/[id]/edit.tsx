@@ -50,6 +50,7 @@ const EditCampaignPage: ProtectedPage<{ campaign: CampaignType }> = ({
 };
 
 EditCampaignPage.getLayout = commonLayout;
+EditCampaignPage.auth = true;
 
 export default EditCampaignPage;
 

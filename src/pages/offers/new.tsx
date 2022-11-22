@@ -36,5 +36,6 @@ const NewOfferPage: ProtectedPage = () => {
 };
 
 NewOfferPage.getLayout = commonLayout;
+NewOfferPage.auth = true;
 
 export default NewOfferPage;

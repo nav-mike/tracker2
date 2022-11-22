@@ -46,5 +46,6 @@ const IndexLandingPage: ProtectedPage = () => {
 };
 
 IndexLandingPage.getLayout = commonLayout;
+IndexLandingPage.auth = true;
 
 export default IndexLandingPage;

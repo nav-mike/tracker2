@@ -67,6 +67,7 @@ const IndexReportPage: ProtectedPage = () => {
 };
 
 IndexReportPage.getLayout = commonLayout;
+IndexReportPage.auth = true;
 
 export default IndexReportPage;
 

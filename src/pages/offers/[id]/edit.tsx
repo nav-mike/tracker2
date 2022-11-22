@@ -47,6 +47,7 @@ const EditOfferPage: ProtectedPage<{ offer: OfferPageType }> = ({ offer }) => {
 };
 
 EditOfferPage.getLayout = commonLayout;
+EditOfferPage.auth = true;
 
 export default EditOfferPage;
 

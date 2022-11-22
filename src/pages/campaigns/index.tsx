@@ -51,5 +51,6 @@ const IndexCampaignPage: ProtectedPage = () => {
 };
 
 IndexCampaignPage.getLayout = commonLayout;
+IndexCampaignPage.auth = true;
 
 export default IndexCampaignPage;
