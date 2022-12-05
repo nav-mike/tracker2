@@ -59,9 +59,7 @@ const Home: NextPage & AuthRequired = () => {
   );
 };
 
-Home.auth = {
-  unauthorized: "/auth/signin",
-};
+Home.auth = true;
 
 export default Home;
 
