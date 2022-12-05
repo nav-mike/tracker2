@@ -11,6 +11,7 @@ import { stripeClient } from "../../server/billing/stripe";
 import { ProtectedPage } from "../../types/auth-required";
 import { trpc } from "../../utils/trpc";
 import { authOptions } from "../api/auth/[...nextauth]";
+import { prisma } from "../../server/db/client";
 
 type StripePlan = {
   id: string;
